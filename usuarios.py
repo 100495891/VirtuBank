@@ -1,28 +1,28 @@
 import json, hashlib, os
-USERS_FILE = 'usuarios.json'
-def crear_contraseña(password):
+ARCHIVO_USUARIOS = 'usuarios.json'
+def codificar_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-def load_users():
-    if os.path.exists(USERS_FILE):
-        with open(USERS_FILE,'r') as file:
+def carga_usuarios():
+    if os.path.exists(ARCHIVO_USUARIOS):
+        with open(ARCHIVO_USUARIOS, 'r') as file:
             return json.load(file)
     return {}
 
-def save_users(users):
-    with open(USERS_FILE,'w') as file:
-        json.dump(users, file, indent=4)
+def guardar_usuarios(usuarios):
+    with open(ARCHIVO_USUARIOS, 'w') as file:
+        json.dump(usuarios, file, indent=4)
 
-def register_user(username, password):
-    users = load_users()
-    if username in users:
-        raise ValueError("User already exists")
-    users[username] = crear_contraseña(password)
-    save_users(users)
-    print(f"User {username} registered successfully")
+def registro_usuario(nombre_usuario, password):
+    usuarios = carga_usuarios()
+    if nombre_usuario in usuarios:
+        raise ValueError("El usuario ya existe")
+    usuarios[nombre_usuario] = codificar_password(password)
+    guardar_usuarios(usuarios)
+    print(f"El usuario {nombre_usuario} se ha registrado correctamente")
 
-def authenticate_user(username, password):
-    users = load_users()
-    if username not in users:
+def login_usuario(nombre_usuario, password):
+    usuarios = carga_usuarios()
+    if nombre_usuario not in usuarios:
         return False
-    return users[username] == crear_contraseña(password)
+    return usuarios[nombre_usuario] == codificar_password(password)
