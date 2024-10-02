@@ -11,18 +11,18 @@ if __name__ == "__main__":
         eleccion = int(input("Selecciona una opción del 1 al 3: "))
 
         if eleccion == 1:
-            usuario = input("\nIntroduzca el nombre de usuario: ")
-            contrasena = input("\nIntroduzca la contraseña: ")
+            usuario = input("\nIntroduzca su DNI: ")
+            password = input("\nCrea una contraseña: ")
             try:
-                u.registro_usuario(usuario, contrasena)
+                u.registro_usuario(usuario, password)
             except ValueError as e:
                 print(e)
 
         elif eleccion == 2:
-            usuario = input("\nIntroduzca el nombre de usuario: ")
-            contrasena = input("\nIntroduzca la contraseña: ")
+            usuario = input("\nIntroduzca su DNI: ")
+            password = input("\nIntroduzca su contraseña: ")
 
-            if u.login_usuario(usuario, contrasena):
+            if u.login_usuario(usuario, password):
                 print("Sesión iniciada.")
             else:
                 print("Usuario o contraseña incorrectos.")
