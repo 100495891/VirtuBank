@@ -1,4 +1,5 @@
-import json, codificacion, os, validaciones
+import json, codificacion, os, validaciones, base64
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 ARCHIVO_USUARIOS = 'usuarios.json'
 def carga_usuarios():
@@ -28,12 +29,41 @@ def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, corr
     usuarios = carga_usuarios()
     if dni in usuarios:
         raise ValueError("El usuario ya existe")
-    usuarios[dni] = codificacion.codificar_password(password)
+    password_codificada, salt = codificacion.codificar_password(password)
+    password_codificada_base64 = base64.b64encode(password_codificada).decode('utf-8')
+    salt_base64 = base64.b64encode(salt).decode('utf-8')
+
+    usuarios[dni] = {
+        'password_codificada': password_codificada_base64,
+        'salt': salt_base64,
+        'nombre': nombre,
+        'apellido1': apellido1,
+        'apellido2': apellido2,
+        'telefono': telefono,
+        'correo_electronico': correo_electronico
+    }
     guardar_usuarios(usuarios)
     print(f"El usuario con DNI {dni} se ha registrado correctamente")
 
 def login_usuario(dni, password):
     usuarios = carga_usuarios()
     if dni not in usuarios:
+        print("DNI")
         return False
-    return usuarios[dni] == codificacion.codificar_password(password)
+    print("no_dni")
+    salt = base64.b64decode(usuarios[dni]['salt'] )
+    password_codificada = base64.b64decode(usuarios[dni]['password_codificada'])
+    kdf = Scrypt(
+        salt=salt,
+        length=32,
+        n=2 ** 14,
+        r=8,
+        p=1,
+    )
+    print("verify:")
+    try:
+        # Verificar la contraseña
+        kdf.verify(password.encode(), password_codificada)
+        return True  # La contraseña es correcta
+    except Exception:
+        return False  # La contraseña es incorrecta
