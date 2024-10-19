@@ -1,21 +1,11 @@
 import random
-
-def generar_codigo_entidad():
-    """Genera un código de entidad aleatorio (4 dígitos)."""
-    return ''.join(random.choices('0123456789', k=4))
-
-def generar_codigo_oficina():
-    """Genera un código de oficina aleatorio (4 dígitos)."""
-    return ''.join(random.choices('0123456789', k=4))
+from datetime import datetime, timedelta
 
 def generar_numero_cuenta():
     """Genera un número de cuenta bancaria aleatorio en formato IBAN español."""
-    entidad = generar_codigo_entidad()
-    oficina = generar_codigo_oficina()
+    entidad = ''.join(random.choices('0123456789', k=4))
+    oficina = ''.join(random.choices('0123456789', k=4))
     cuenta = ''.join(random.choices('0123456789', k=10))  # 10 dígitos para el número de cuenta
-
-    # Generar dígitos de control (kk) - en un entorno real, esto se calcularía correctamente
-    # Para simplificar, se pueden generar aleatoriamente.
     digitos_control = ''.join(random.choices('0123456789', k=2))
 
     # Formato IBAN
@@ -45,6 +35,13 @@ def generar_numero_tarjeta_visa():
     cuenta = ''.join(random.choices('0123456789', k=9))  # 9 dígitos para el número de cuenta
     numero_sin_control = iin + cuenta
     digito_control = calcular_digito_control(numero_sin_control)
-    numero_tarjeta = numero_sin_control + str(digito_control)
+    numero_tarjeta = f"{numero_sin_control}{digito_control}"
 
     return numero_tarjeta
+
+def generar_fecha_expiracion():
+    fecha_actual = datetime.now()
+    fecha_expiracion = fecha_actual + timedelta(days=5*365)
+    mes = fecha_expiracion.month
+    anio = fecha_expiracion.year % 100
+    return f"{mes:02d}/{anio:02d}"
