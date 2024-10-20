@@ -26,7 +26,7 @@ def calcular_digito_control(numero):
                 n -= 9
         suma += n
         alt = not alt
-    return (10 - (suma % 10)) % 10
+    return str((10 - (suma % 10)) % 10)
 
 
 def generar_numero_tarjeta_visa():

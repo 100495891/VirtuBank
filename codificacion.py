@@ -1,10 +1,16 @@
-import os, base64
+import base64
+import os
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 def registro(password, salt):
-    kdf = Scrypt(salt, 32, 2**14, 8, 1)
+    kdf = Scrypt(
+        salt=salt,
+        length=32,
+        n=2**14,
+        r=8,
+        p=1)
     key = kdf.derive(password.encode())
     return key
 
@@ -32,16 +38,25 @@ def generar_clave_chacha(password_codificada, salt2):
     )
     return kdf.derive(password_codificada)
 
-def cifrar(dni, datos_cifrar, clave):
+def cifrar(dni, datos_cifrar, clave, nonce):
     chacha = ChaCha20Poly1305(clave)
-    nonce = os.urandom(12)
-    datos_cifrar = str(datos_cifrar).encode()
+    if nonce is None:
+        nonce = os.urandom(12)
+        nonce_nuevo = True
+    else:
+        nonce_nuevo = False
+    datos_cifrar = datos_cifrar.encode()
     aad = dni.encode()
     ct = chacha.encrypt(nonce, datos_cifrar, aad)
-    #chacha.decrypt(nonce, ct, aad)
-    return nonce, ct
+    ct_b64 = base64.b64encode(ct).decode('utf-8')
+    nonce_b64 = base64.b64encode(nonce).decode('utf-8')
+    if nonce_nuevo:
+        return nonce_b64, ct_b64
+    else:
+        return ct_b64
 
 def descifrar(dni, ct, clave, nonce):
     chacha = ChaCha20Poly1305(clave)
     aad = dni.encode()
-    return chacha.decrypt(nonce, ct, aad)
+    datos_descifrados = chacha.decrypt(nonce, ct, aad)
+    return datos_descifrados.decode('utf-8')

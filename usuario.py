@@ -66,18 +66,19 @@ def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, corr
 
     # Le creamos al usuario datos de cuenta y de tarjeta
     numero_cuenta = cuenta.generar_numero_cuenta()
-    numero_tarjeta = cuenta.generar_numero_tarjeta_visa(),
+    numero_tarjeta = cuenta.generar_numero_tarjeta_visa()
     fecha_expiracion_tarjeta = cuenta.generar_fecha_expiracion()
     cvv = ''.join(random.choices('0123456789', k=3))
 
 
     # Generamos la clave para el cifrado autenticado a partir de la contraseña codificada y el salt 2
     clave = codificacion.generar_clave_chacha(password_codificada, salt2)
-    # Ciframos todos los datos de la cuenta y la tarjeta
-    nonce_cuenta, cuenta_cifrada = codificacion.cifrar(dni, numero_cuenta, clave)
-    nonce_tarjeta, tarjeta_cifrada = codificacion.cifrar(dni, numero_tarjeta, clave)
-    nonce_fecha_expiracion_tarjeta, fecha_expiracion_cifrada = codificacion.cifrar(dni, fecha_expiracion_tarjeta, clave)
-    nonce_cvv, cvv_cifrado = codificacion.cifrar(dni, cvv, clave)
+    # Ciframos todos los datos de la cuenta, la tarjeta y el saldo
+    nonce_cuenta, cuenta_cifrada = codificacion.cifrar(dni, numero_cuenta, clave, None)
+    nonce_tarjeta, tarjeta_cifrada = codificacion.cifrar(dni, numero_tarjeta, clave, None)
+    nonce_fecha_expiracion_tarjeta, fecha_expiracion_cifrada = codificacion.cifrar(dni, fecha_expiracion_tarjeta, clave, None)
+    nonce_cvv, cvv_cifrado = codificacion.cifrar(dni, cvv, clave, None)
+    nonce_saldo, saldo_inicial = codificacion.cifrar(dni, '0', clave, None)
 
 
     #Diccionario usuario
@@ -88,19 +89,21 @@ def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, corr
         'apellido2': apellido2,
         'telefono': telefono,
         'correo_electronico': correo_electronico,
-        'numero_cuenta_cifrado': base64.b64encode(cuenta_cifrada).decode('utf-8'),
-        'tarjeta_cifrada': base64.b64encode(tarjeta_cifrada).decode('utf-8'),
-        'fecha_expiracion_cifrada': base64.b64encode(fecha_expiracion_cifrada).decode('utf-8'),
-        'cvv_cifrado': base64.b64encode(cvv_cifrado).decode('utf-8'),
+        'saldo_disponible': saldo_inicial,
+        'numero_cuenta_cifrado': cuenta_cifrada,
+        'tarjeta_cifrada': tarjeta_cifrada,
+        'fecha_expiracion_cifrada': fecha_expiracion_cifrada,
+        'cvv_cifrado': cvv_cifrado,
         'salt': base64.b64encode(salt).decode('utf-8'),
         'salt2': base64.b64encode(salt2).decode('utf-8')
     }
     #Diccionario Nonces
     nonces[dni] = {
-        'nonce_cuenta': base64.b64encode(nonce_cuenta).decode('utf-8'),
-        'nonce_tarjeta': base64.b64encode(nonce_tarjeta).decode('utf-8'),
-        'nonce_fecha_expiracion_tarjeta': base64.b64encode(nonce_fecha_expiracion_tarjeta).decode('utf-8'),
-        'nonce_cvv': base64.b64encode(nonce_cvv).decode('utf-8')
+        'nonce_saldo': nonce_saldo,
+        'nonce_cuenta': nonce_cuenta,
+        'nonce_tarjeta': nonce_tarjeta,
+        'nonce_fecha_expiracion_tarjeta': nonce_fecha_expiracion_tarjeta,
+        'nonce_cvv': nonce_cvv
     }
 
     guardar_usuarios(usuarios)
