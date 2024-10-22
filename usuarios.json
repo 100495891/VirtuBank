@@ -1,0 +1,47 @@
+{
+    "02597751Q": {
+        "password_codificada": "mOa5qdrjjJWZHyMLX+KA+99xVTmvRcJuIUrOXRN+v/M=",
+        "nombre": "maria",
+        "apellido1": "mmontanet",
+        "apellido2": "estebaranz",
+        "telefono": "606375149",
+        "correo_electronico": "ma@gmail.com",
+        "saldo_disponible": "lLskbwBhWnCo3XKHQtaGm81ulGrCmjziSgo=",
+        "numero_cuenta_cifrado": "zjmngic/pjEp5YgAXmJjiFM+xiweFSOa7v/pXN6BHyNtgJiaFOPDXDw=",
+        "tarjeta_cifrada": "twwUCkK0iRO7SAODBGyd+oZ/xrIlx/bKNWf3PjTPbvA=",
+        "fecha_expiracion_cifrada": "OVbqkAy/KvI8P/rCBCO+m70rJxD2",
+        "cvv_cifrado": "Ea1d0sX1EtNMIy8tPFuJ9maYfw==",
+        "salt": "OUUdUkQwQw9SmV05aB4CIg==",
+        "salt2": "sfAuPjSLGE7ZbGr0PKDJ2Q=="
+    },
+    "47587077P": {
+        "password_codificada": "zeLAIK57+OF/lAJA44O7qnWcWkFuQ3F61ecCyqztfIc=",
+        "nombre": "Asier",
+        "apellido1": "Martinez",
+        "apellido2": "Garcia",
+        "telefono": "668827850",
+        "correo_electronico": "a@gmail.com",
+        "saldo_disponible": "p84rkxu/o+4FTy6bnfpffkE=",
+        "numero_cuenta_cifrado": "48bB3siCFbywt39zXm+Hv/g0wRbWJzBASub+VNmewOuk85Jo7dd4if4=",
+        "tarjeta_cifrada": "SL0H3BWNwO+wE+UwbiKEUmW48jqU/bxkterESF7oeZA=",
+        "fecha_expiracion_cifrada": "KdcCfUZWoKV6w4BdGoaUkNgGF76o",
+        "cvv_cifrado": "V5K2RnlnJTGnMsD2smRgJ2NalQ==",
+        "salt": "2SsxJC3kkDL5HlWJYWb/4g==",
+        "salt2": "Ka3S5fXKZVjVhI7XTiLYQA=="
+    },
+    "02597700B": {
+        "password_codificada": "F8aI2OgwNhcMEC2Jh1K0f1WrzgHb5OIjD+YPXjixZeE=",
+        "nombre": "Guillermo",
+        "apellido1": "anchez",
+        "apellido2": "Sanlucas",
+        "telefono": "611402317",
+        "correo_electronico": "g@gmail.com",
+        "saldo_disponible": "/DjotOMOagvWjohgAe3eF6egWLY5",
+        "numero_cuenta_cifrado": "GSV/lxBEu3OUVfHb1G4yrJSllIQ7fZfs44LQ1bOI2miaBJxSUS7NkZY=",
+        "tarjeta_cifrada": "hyjXai8Q+y6YfUBS4t9CgUoCUAEGMG16mlvo2PR9X2k=",
+        "fecha_expiracion_cifrada": "A45iPEdMcPA/cyEDS1lCI1SJJTx0",
+        "cvv_cifrado": "jN/gPUV/N+ezshFOyx67JH39eA==",
+        "salt": "r5ccGpZcH5YDwib6VopRzQ==",
+        "salt2": "DySKO+HIMKrxiaEl3BunQg=="
+    }
+}

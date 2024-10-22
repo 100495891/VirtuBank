@@ -7,7 +7,9 @@ def transacciones(dni, cifra, operacion):
     else:
         if float(saldo) < cifra:
             print("No dispone de suficiente saldo")
+            return False
         else:
             saldo = float(saldo) - cifra
             print(f"Su dinero se ha retirado correctamente \n Nuevo saldo disponible: {saldo} euros\n")
     acceso_datos.actualizar_datos(dni, saldo, 'saldo_disponible', 'nonce_saldo')
+    return True

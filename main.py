@@ -1,7 +1,7 @@
 import usuario as u
 import acceso_datos as datos
 import modificacion_saldo
-
+import bizum as b
 if __name__ == "__main__":
     salir = False
     while not salir:
@@ -49,22 +49,27 @@ if __name__ == "__main__":
 
                     if accion == 1:
                         saldo = datos.revisar_datos(dni, 'saldo_disponible', 'nonce_saldo')
-                        print(f"Su saldo es {saldo} euros\n")
+                        print(f"\nSu saldo es {saldo} euros")
                         input("Presione Enter para continuar...")
                     elif accion == 2:
-                        cifra = float(input("Introduzca la cantidad que desea ingresar: "))
+                        cifra = float(input("\nIntroduzca la cantidad que desea ingresar: "))
                         modificacion_saldo.transacciones(dni, cifra, '+')
                         input("Presione Enter para continuar...")
                     elif accion == 3:
-                        cifra = float(input("Introduzca la cantidad que desea retirar: "))
+                        cifra = float(input("\nIntroduzca la cantidad que desea retirar: "))
                         modificacion_saldo.transacciones(dni, cifra, '-')
                         input("Presione Enter para continuar...")
                     elif accion == 4:
+                        telefono = input("\nIntroduzca su teléfono: ")
+                        password = input("\nIntroduzca su contraseña: ")
+                        print(b.registrarse_bizum(dni, telefono, password))
                         input("Presione Enter para continuar...")
-                        cerrar_sesion = True
                     elif accion == 5:
+                        telefono_origen = input("\nIntroduzca su teléfono: ")
+                        telefono_destino = input("\nIntroduzca el teléfono de la persona a la que desea enviar el bizum: ")
+                        cantidad = float(input("\nIntroduzca la cantidad que desea enviar: "))
+                        print(b.realizar_bizum(telefono_origen, cantidad, telefono_destino))
                         input("Presione Enter para continuar...")
-                        cerrar_sesion = True
                     elif accion == 6:
                         input("Presione Enter para continuar...")
                         cerrar_sesion = True
