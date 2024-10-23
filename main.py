@@ -45,19 +45,21 @@ if __name__ == "__main__":
                     print("9. Cambiar contraseña\n")
                     print("10. Eliminar cuenta\n")
                     print("11. Cerrar Sesión\n")
-                    accion = int(input("Seleccione una opción (1-8): "))
+                    accion = int(input("Seleccione una opción (1-11): "))
 
                     if accion == 1:
-                        saldo = datos.revisar_datos(dni, 'saldo_disponible', 'nonce_saldo')
+                        saldo = datos.revisar_datos(dni, password, 'saldo_disponible', 'nonce_saldo')
                         print(f"\nSu saldo es {saldo} euros")
                         input("Presione Enter para continuar...")
                     elif accion == 2:
                         cifra = float(input("\nIntroduzca la cantidad que desea ingresar: "))
-                        modificacion_saldo.transacciones(dni, cifra, '+')
+                        sol = modificacion_saldo.transacciones(dni, password, cifra, '+')
+                        print(f"Su dinero se ha ingresado correctamente \n Nuevo saldo disponible: {sol[1]} euros\n")
                         input("Presione Enter para continuar...")
                     elif accion == 3:
                         cifra = float(input("\nIntroduzca la cantidad que desea retirar: "))
-                        modificacion_saldo.transacciones(dni, cifra, '-')
+                        sol = modificacion_saldo.transacciones(dni, password, cifra, '-')
+                        print(f"Su dinero se ha retirado correctamente \n Nuevo saldo disponible: {sol[1]} euros\n")
                         input("Presione Enter para continuar...")
                     elif accion == 4:
                         telefono = input("\nIntroduzca su teléfono: ")
@@ -65,22 +67,21 @@ if __name__ == "__main__":
                         print(b.registrarse_bizum(dni, telefono, password))
                         input("Presione Enter para continuar...")
                     elif accion == 5:
-                        telefono_origen = input("\nIntroduzca su teléfono: ")
                         telefono_destino = input("\nIntroduzca el teléfono de la persona a la que desea enviar el bizum: ")
                         cantidad = float(input("\nIntroduzca la cantidad que desea enviar: "))
-                        print(b.realizar_bizum(telefono_origen, cantidad, telefono_destino))
+                        print(b.realizar_bizum(dni, password, cantidad, telefono_destino))
                         input("Presione Enter para continuar...")
                     elif accion == 6:
+                        print(b.revisar_transacciones(dni))
                         input("Presione Enter para continuar...")
-                        cerrar_sesion = True
                     elif accion == 7:
-                        num_cuenta = datos.revisar_datos(dni, 'numero_cuenta_cifrado', 'nonce_cuenta')
+                        num_cuenta = datos.revisar_datos(dni, password, 'numero_cuenta_cifrado', 'nonce_cuenta')
                         print(f"Su número de cuenta es {num_cuenta}")
                         input("Presione Enter para continuar...")
                     elif accion == 8:
-                        num_tarjeta = datos.revisar_datos(dni, 'tarjeta_cifrada', 'nonce_tarjeta')
-                        fecha_expiracion = datos.revisar_datos(dni, 'fecha_expiracion_cifrada', 'nonce_fecha_expiracion_tarjeta')
-                        cvv = datos.revisar_datos(dni, 'cvv_cifrado', 'nonce_cvv')
+                        num_tarjeta = datos.revisar_datos(dni, password, 'tarjeta_cifrada', 'nonce_tarjeta')
+                        fecha_expiracion = datos.revisar_datos(dni, password, 'fecha_expiracion_cifrada', 'nonce_fecha_expiracion_tarjeta')
+                        cvv = datos.revisar_datos(dni, password,'cvv_cifrado', 'nonce_cvv')
                         print(f"Titular de la tarjeta: {u.nombre_titular(dni)}")
                         print(f"Número tarjeta:{num_tarjeta}")
                         print(f"Fecha Expiración:{fecha_expiracion}")

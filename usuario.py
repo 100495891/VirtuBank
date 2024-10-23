@@ -71,8 +71,8 @@ def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, corr
     cvv = ''.join(random.choices('0123456789', k=3))
 
 
-    # Generamos la clave para el cifrado autenticado a partir de la contraseña codificada y el salt 2
-    clave = codificacion.generar_clave_chacha(password_codificada, salt2)
+    # Generamos la clave para el cifrado autenticado a partir de la contraseña y el salt 2
+    clave = codificacion.generar_clave_chacha(password, salt2)
     # Ciframos todos los datos de la cuenta, la tarjeta y el saldo
     nonce_cuenta, cuenta_cifrada = codificacion.cifrar(dni, numero_cuenta, clave, None)
     nonce_tarjeta, tarjeta_cifrada = codificacion.cifrar(dni, numero_tarjeta, clave, None)

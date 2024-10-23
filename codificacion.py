@@ -29,14 +29,14 @@ def autenticacion(password, password_codificada, salt):
     except Exception:
         return False  # La contraseña es incorrecta
 
-def generar_clave_chacha(password_codificada, salt2):
+def generar_clave_chacha(password, salt2):
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
         salt=salt2,
         iterations=480000,
     )
-    return kdf.derive(password_codificada)
+    return kdf.derive(password.encode())
 
 def cifrar(dni, datos_cifrar, clave, nonce):
     chacha = ChaCha20Poly1305(clave)
