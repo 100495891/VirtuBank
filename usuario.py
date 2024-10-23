@@ -62,7 +62,7 @@ def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, corr
     salt2 = os.urandom(16)
 
     #Codificamos la contraseña del usuario (en bytes)
-    password_codificada = codificacion.registro(password, salt)
+    password_token = codificacion.registro(password, salt)
 
     # Le creamos al usuario datos de cuenta y de tarjeta
     numero_cuenta = cuenta.generar_numero_cuenta()
@@ -83,7 +83,7 @@ def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, corr
 
     #Diccionario usuario
     usuarios[dni] = {
-        'password_codificada': base64.b64encode(password_codificada).decode('utf-8'),
+        'password_token': base64.b64encode(password_token).decode('utf-8'),
         'nombre': nombre,
         'apellido1': apellido1,
         'apellido2': apellido2,
@@ -115,8 +115,8 @@ def login_usuario(dni, password):
     if dni not in usuarios:
         return False
     salt = base64.b64decode(usuarios[dni]['salt'] )
-    password_codificada = base64.b64decode(usuarios[dni]['password_codificada'])
-    return codificacion.autenticacion(password, password_codificada, salt)
+    password_token = base64.b64decode(usuarios[dni]['password_token'])
+    return codificacion.autenticacion(password, password_token, salt)
 
 def nombre_titular(dni):
     usuarios = carga_usuarios()

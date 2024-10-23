@@ -1,32 +1,32 @@
 {
     "02597751Q": {
-        "password_codificada": "gbwuFjp5RnVlE3yucev1ezXzuFCc9L2WiSBzG2Dd6Ow=",
+        "password_token": "TMnFL3Bf6fmr1vRn1tjPKj3ToNzNl1i/vtCFR+EpwVQ=",
         "nombre": "Maria",
         "apellido1": "Montanet",
         "apellido2": "Estebaranz",
         "telefono": "606375149",
         "correo_electronico": "m@gmail.com",
-        "saldo_disponible": "3xA9osG5Fojm0FW3ktMFuM27S2E=",
-        "numero_cuenta_cifrado": "nViyPQfo7SrmY8pL7aLtuEEWFOD1GamCGM/Onx3zrgBpJz5CU3ZYqgQ=",
-        "tarjeta_cifrada": "Or0f2fcC9rTqwGA2EDc41j+MJSkk+T16UCIGW73ED3w=",
-        "fecha_expiracion_cifrada": "elknrzugFrSfp/02nENtI8xvJZ42",
-        "cvv_cifrado": "1rKUdSzZBuKyLQTFZJ9mRq1MOw==",
-        "salt": "P72Z5IDnZZ1DshXmyleGfA==",
-        "salt2": "pFxxLBkCuEPxnbuv5eurug=="
+        "saldo_disponible": "rLy3A+Bs+/BzZ/GaWLgPFf5WzKD6",
+        "numero_cuenta_cifrado": "FHvS1KwImDp5DhVvw4kFypkjbtkEYiF5xHhl+RQgNODg2hQ7TC2hnjg=",
+        "tarjeta_cifrada": "B7kPjVKjvNv6UsTIbewvnliWOP8qLW1OLfwRSftehyk=",
+        "fecha_expiracion_cifrada": "VAF613jvzMSpzzfSKOKmi8c1qWdK",
+        "cvv_cifrado": "N3GfJ96aJsoUS9xjaCbXtd/MKQ==",
+        "salt": "SjitW6xI0MuA1TmXzr674Q==",
+        "salt2": "p7bCJE7l8FbicAZshE/rPw=="
     },
     "02597700B": {
-        "password_codificada": "5mUNZ/948lnP6HjcX4/JIaj0hE7QIOw9KiWq+pTIVXc=",
+        "password_token": "Fjb1nwoLjsuFhD60L9l+DxzDDQs1SpXSTro6h9XbJok=",
         "nombre": "Guillermo",
         "apellido1": "Sanchez",
         "apellido2": "Sanlucas",
         "telefono": "611402317",
         "correo_electronico": "g@gmail.com",
-        "saldo_disponible": "AeoxWlfFXNMTzaUkZGeoiRSdhlI=",
-        "numero_cuenta_cifrado": "UHDVvwWgOJvG43PmCsDlESKzZkTZ4UVdP8hWmAQSQl+2jKwZaXoKmEg=",
-        "tarjeta_cifrada": "wtNC14GaF++KrNL3MNG/L2Gx3OfHU9UwsPVI5F4rU5w=",
-        "fecha_expiracion_cifrada": "5Kj7NPN3i6JGEoGC2qFLmWnAmEg7",
-        "cvv_cifrado": "VRCKgHD6mUGBj28Vyt9iEO/fDQ==",
-        "salt": "FaqJlu7F0Lm21q5eceMp3A==",
-        "salt2": "cL9RQJ8wnsopeqxt1C+Qkg=="
+        "saldo_disponible": "PMERayQstbor7bQ4hXRRypeQyZ0=",
+        "numero_cuenta_cifrado": "3mXFzu7so01JdglsKZ4tlqZcJP1Hr8jERdQnU4NoYsV5zLQh9QGtFAs=",
+        "tarjeta_cifrada": "+wYVpK5dXglRaSBirMHvknQ4rSFVAYjIF5aJzPLQkbc=",
+        "fecha_expiracion_cifrada": "fC5Wig9wMBZleTpm5IbQ0BrCji4q",
+        "cvv_cifrado": "CGaDZLwiu2M+F5OiBG5Nawmt4A==",
+        "salt": "lwQk1Gm12urm812GREJIaQ==",
+        "salt2": "1rqo5kvcnt+c/A79W8HLBQ=="
     }
 }

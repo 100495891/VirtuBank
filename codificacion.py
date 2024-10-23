@@ -14,7 +14,7 @@ def registro(password, salt):
     key = kdf.derive(password.encode())
     return key
 
-def autenticacion(password, password_codificada, salt):
+def autenticacion(password, password_token, salt):
     kdf = Scrypt(
         salt=salt,
         length=32,
@@ -24,7 +24,7 @@ def autenticacion(password, password_codificada, salt):
     )
     try:
         # Verificar la contraseña
-        kdf.verify(password.encode(), password_codificada)
+        kdf.verify(password.encode(), password_token)
         return True  # La contraseña es correcta
     except Exception:
         return False  # La contraseña es incorrecta
