@@ -37,9 +37,9 @@ if __name__ == "__main__":
             dni = input("\nIntroduzca su DNI: ")
             password = input("\nIntroduzca su contraseña: ")
             usuario = Usuario(dni, password)
-            gestor_datos = GestorDatos(usuario.dni, usuario.password)
-            bizum = Bizum(usuario.dni, usuario.password)
             if usuario.login_usuario():
+                gestor_datos = GestorDatos(usuario.dni, usuario.password)
+                bizum = Bizum(usuario.dni, usuario.password)
                 print("Sesión iniciada.")
                 cerrar_sesion = False
                 while not cerrar_sesion:
@@ -118,13 +118,12 @@ if __name__ == "__main__":
                         input("Presione Enter para continuar...")
                     elif accion == 7:
                         try:
-                            operaciones_pendientes = bizum.operaciones_pendientes
+                            operaciones_pendientes = usuario.carga_json(bizum.ARCHIVO_OPERACIONES_PENDIENTES)
                             if dni in operaciones_pendientes:
                                 print("\nAquí tiene sus operaciones pendientes")
                                 bizum.revisar_operaciones_pendientes()
                                 op = input("\n¿Quiere aceptarlas? (y/n): ").lower()
                                 if op == "y":
-                                    telefono = input("\nConfirme su telefono: ")
                                     print(bizum.cargar_operaciones_pendientes())
                                     saldo = gestor_datos.revisar_datos('saldo_disponible', 'saldo_disponible')
                                     print(f"\nSu saldo es {saldo} euros")

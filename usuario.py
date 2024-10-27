@@ -1,5 +1,7 @@
-import json, os, validaciones, base64, cuenta, random
+import json, os, base64, random
 from codificacion import Codificacion
+from cuenta import CuentaBancaria
+from validaciones import Validaciones
 
 class Usuario:
 
@@ -10,6 +12,8 @@ class Usuario:
         self.dni = dni
         self.password = password
         self.codificacion = Codificacion()
+        self.cuenta_bancaria = CuentaBancaria()
+        self.validaciones = Validaciones(dni)
 
     def carga_json(self, archivo):
         # Carga datos desde un archivo JSON
@@ -32,17 +36,17 @@ class Usuario:
 
     def validar_datos(self, nombre, apellido1, apellido2, telefono, correo_electronico):
         # Valida la información del usuario
-        if not validaciones.validar_dni(self.dni):
+        if not self.validaciones.validar_dni():
             raise ValueError('DNI inválido')
-        if not validaciones.validar_nombre_apellido(nombre):
+        if not self.validaciones.validar_nombre_apellido(nombre):
             raise ValueError('Nombre Inválido')
-        if not validaciones.validar_nombre_apellido(apellido1):
+        if not self.validaciones.validar_nombre_apellido(apellido1):
             raise ValueError('Primer Apellido Inválido')
-        if not validaciones.validar_nombre_apellido(apellido2):
+        if not self.validaciones.validar_nombre_apellido(apellido2):
             raise ValueError('Segundo Apellido Inválido')
-        if not validaciones.validar_telefono(telefono):
+        if not self.validaciones.validar_telefono(telefono):
             raise ValueError('Teléfono Inválido')
-        if not validaciones.validar_correo(correo_electronico):
+        if not self.validaciones.validar_correo(correo_electronico):
             raise ValueError('Correo electrónico inválido')
 
     def cifrar_datos(self, clave, datos):
@@ -76,9 +80,9 @@ class Usuario:
                 'telefono': telefono,
                 'correo_electronico': correo_electronico,
                 'saldo_disponible': '0',
-                'numero_cuenta': cuenta.generar_numero_cuenta(),
-                'tarjeta': cuenta.generar_numero_tarjeta_visa(),
-                'fecha_expiracion_tarjeta': cuenta.generar_fecha_expiracion(),
+                'numero_cuenta': self.cuenta_bancaria.generar_numero_cuenta(),
+                'tarjeta': self.cuenta_bancaria.generar_numero_tarjeta_visa(),
+                'fecha_expiracion_tarjeta': self.cuenta_bancaria.generar_fecha_expiracion(),
                 'cvv': ''.join(random.choices('0123456789', k=3))
             }
 
