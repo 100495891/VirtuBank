@@ -1,10 +1,18 @@
 {
-    "611402317": {
-        "dni": "02597700B",
-        "transacciones": {}
-    },
     "606375149": {
         "dni": "02597751Q",
+        "transacciones": {
+            "611402317": [
+                {
+                    "dinero": "KowfsgFDdt8x04XMtShv9Nxys+7I",
+                    "fecha": "27/10/2024 09:47:25",
+                    "nonce": "Em8pOKGCH8aYM3Sb"
+                }
+            ]
+        }
+    },
+    "611402317": {
+        "dni": "02597700B",
         "transacciones": {}
     }
 }
