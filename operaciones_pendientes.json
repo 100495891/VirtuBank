@@ -1,0 +1,14 @@
+{
+    "02597700B": {
+        "telefono": "611402317",
+        "transacciones": {
+            "606375149": [
+                {
+                    "dinero": "03EVu4RqQO3cVzLBu5gMFEsKsO8=",
+                    "fecha": "27/10/2024 09:47:26",
+                    "nonce": "pyRBMuYAmxVo32K1"
+                }
+            ]
+        }
+    }
+}

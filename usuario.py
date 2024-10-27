@@ -1,126 +1,121 @@
-import json, codificacion, os, validaciones, base64, cuenta, random
+import json, os, validaciones, base64, cuenta, random
+from codificacion import Codificacion
+
+class Usuario:
+
+    ARCHIVO_USUARIOS = 'usuarios.json'
+    ARCHIVO_NONCES = 'nonces.json'
+
+    def __init__(self, dni, password):
+        self.dni = dni
+        self.password = password
+        self.codificacion = Codificacion()
+
+    def carga_json(self, archivo):
+        # Carga datos desde un archivo JSON
+        try:
+            if os.path.exists(archivo):
+                with open(archivo, 'r') as file:
+                    return json.load(file)
+            return {}
+        except json.JSONDecodeError:
+            print("Error al cargar el JSON")
 
 
-ARCHIVO_USUARIOS = 'usuarios.json'
-ARCHIVO_NONCES = 'nonces.json'
+    def guardar_json(self, archivo, datos):
+        # Guarda datos en un archivo JSON
+        try:
+            with open(archivo, 'w') as file:
+                json.dump(datos, file, indent=4)
+        except IOError as e:
+            raise RuntimeError(f"Error al guardar usuarios: {e}")
+
+    def validar_datos(self, nombre, apellido1, apellido2, telefono, correo_electronico):
+        # Valida la información del usuario
+        if not validaciones.validar_dni(self.dni):
+            raise ValueError('DNI inválido')
+        if not validaciones.validar_nombre_apellido(nombre):
+            raise ValueError('Nombre Inválido')
+        if not validaciones.validar_nombre_apellido(apellido1):
+            raise ValueError('Primer Apellido Inválido')
+        if not validaciones.validar_nombre_apellido(apellido2):
+            raise ValueError('Segundo Apellido Inválido')
+        if not validaciones.validar_telefono(telefono):
+            raise ValueError('Teléfono Inválido')
+        if not validaciones.validar_correo(correo_electronico):
+            raise ValueError('Correo electrónico inválido')
+
+    def cifrar_datos(self, clave, datos):
+        # Cifra todos los datos del usuario y los devuelve en un diccionario
+        return {key: self.codificacion.cifrar(self.dni, valor, clave, None) for key, valor in datos.items()}
+
+    def registro_usuario(self, nombre, apellido1, apellido2, telefono, correo_electronico):
+        try:
+            # Validamos los datos del usuario
+            self.validar_datos(nombre, apellido1, apellido2, telefono, correo_electronico)
+
+            # Comprobamos que no exista el usuario ni sus nonces
+            usuarios = self.carga_json(self.ARCHIVO_USUARIOS)
+            nonces = self.carga_json(self.ARCHIVO_NONCES)
+            if self.dni in usuarios or self.dni in nonces:
+                raise ValueError("El usuario ya existe")
 
 
-#DESCARGAR DATOS USUARIOS
-def carga_usuarios():
-    if os.path.exists(ARCHIVO_USUARIOS):
-        with open(ARCHIVO_USUARIOS, 'r') as file:
-            return json.load(file)
-    return {}
+            # Creamos los dos salts, 1 para la contraseña del usuario y otro para los datos de la cuenta
+            salt = os.urandom(16)
+            salt2 = os.urandom(16)
+
+            #Codificamos la contraseña del usuario (en bytes)
+            password_token = self.codificacion.registro(self.password, salt)
+
+            # Datos del usuario sin cifrar
+            datos = {
+                'nombre': nombre,
+                'apellido1': apellido1,
+                'apellido2': apellido2,
+                'telefono': telefono,
+                'correo_electronico': correo_electronico,
+                'saldo_disponible': '0',
+                'numero_cuenta': cuenta.generar_numero_cuenta(),
+                'tarjeta': cuenta.generar_numero_tarjeta_visa(),
+                'fecha_expiracion_tarjeta': cuenta.generar_fecha_expiracion(),
+                'cvv': ''.join(random.choices('0123456789', k=3))
+            }
 
 
-#GUARDAR USUARIOS EN EL JSON
-def guardar_usuarios(usuarios):
-    with open(ARCHIVO_USUARIOS, 'w') as file:
-        json.dump(usuarios, file, indent=4)
+            # Generamos la clave para el cifrado autenticado a partir de la contraseña y el salt 2
+            clave = self.codificacion.generar_clave_chacha(self.password, salt2)
+            datos_cifrados = self.cifrar_datos(clave, datos)
 
+            # Almacenamiento de usuario
+            usuarios[self.dni] = {
+                'password_token': base64.b64encode(password_token).decode('utf-8'),
+                'salt': base64.b64encode(salt).decode('utf-8'),
+                'salt2': base64.b64encode(salt2).decode('utf-8'),
+                **{k: v[1] for k, v in datos_cifrados.items()}
+            } # v es una tupla (nonce, dato) por eso cogemos la posicion 1 (dato)
 
-#GUARDAR NONCES EN EL JSON
-def guardar_nonces(nonces):
-    with open(ARCHIVO_NONCES, 'w') as file:
-        json.dump(nonces, file, indent=4)
+            # Almacenamiento de nonces
+            nonces[self.dni] = {k: v[0] for k, v in datos_cifrados.items()}
 
+            # Guardamos los datos cifrados en los json
+            self.guardar_json(self.ARCHIVO_USUARIOS, usuarios)
+            self.guardar_json(self.ARCHIVO_NONCES, nonces)
 
-#DESCARGAR NONCES
-def carga_nonces():
-    if os.path.exists(ARCHIVO_NONCES):
-        with open(ARCHIVO_NONCES, 'r') as file:
-            return json.load(file)
-    return {}
+            return f"El usuario con DNI {self.dni} se ha registrado correctamente"
 
+        except Exception as e:
+            raise RuntimeError(f"Error en el registro de usuario: {e}")
 
+    def login_usuario(self):
+        # Inicio de sesión de usuario
+        try:
+            usuarios = self.carga_json(self.ARCHIVO_USUARIOS)
+            if self.dni not in usuarios:
+                return False
+            salt = base64.b64decode(usuarios[self.dni]['salt'] )
+            password_token = base64.b64decode(usuarios[self.dni]['password_token'])
+            return self.codificacion.autenticacion(self.password, password_token, salt)
+        except Exception as e:
+            raise RuntimeError(f"Error en el inicio de sesión: {e}")
 
-
-def registro_usuario(dni, password, nombre, apellido1, apellido2, telefono, correo_electronico): #añadir cod postal, ciudad y pais
-    if  not validaciones.validar_dni(dni):
-        raise ValueError('DNI inválido')
-    if not validaciones.validar_nombre_apellido(nombre):
-        raise ValueError('Nombre Inválido')
-    if not validaciones.validar_nombre_apellido(apellido1):
-        raise ValueError('Primer Apellido Inválido')
-    if not validaciones.validar_nombre_apellido(apellido2):
-        raise ValueError('Segundo Apellido Inválido')
-    if not validaciones.validar_telefono(telefono):
-        raise ValueError('Teléfono Inválido')
-    if not validaciones.validar_correo(correo_electronico):
-        raise ValueError('Correo electrónico inválido')
-
-
-    # Comprobamos que no exista el usuario ni sus nonces
-    usuarios = carga_usuarios()
-    nonces = carga_nonces()
-    if dni in usuarios or dni in nonces:
-        raise ValueError("El usuario ya existe")
-
-
-    #Creamos los dos salts, 1 para la contraseña del usuario y otro para los datos de la cuenta
-    salt = os.urandom(16)
-    salt2 = os.urandom(16)
-
-    #Codificamos la contraseña del usuario (en bytes)
-    password_token = codificacion.registro(password, salt)
-
-    # Le creamos al usuario datos de cuenta y de tarjeta
-    numero_cuenta = cuenta.generar_numero_cuenta()
-    numero_tarjeta = cuenta.generar_numero_tarjeta_visa()
-    fecha_expiracion_tarjeta = cuenta.generar_fecha_expiracion()
-    cvv = ''.join(random.choices('0123456789', k=3))
-
-
-    # Generamos la clave para el cifrado autenticado a partir de la contraseña y el salt 2
-    clave = codificacion.generar_clave_chacha(password, salt2)
-    # Ciframos todos los datos de la cuenta, la tarjeta y el saldo
-    nonce_cuenta, cuenta_cifrada = codificacion.cifrar(dni, numero_cuenta, clave, None)
-    nonce_tarjeta, tarjeta_cifrada = codificacion.cifrar(dni, numero_tarjeta, clave, None)
-    nonce_fecha_expiracion_tarjeta, fecha_expiracion_cifrada = codificacion.cifrar(dni, fecha_expiracion_tarjeta, clave, None)
-    nonce_cvv, cvv_cifrado = codificacion.cifrar(dni, cvv, clave, None)
-    nonce_saldo, saldo_inicial = codificacion.cifrar(dni, '0', clave, None)
-
-
-    #Diccionario usuario
-    usuarios[dni] = {
-        'password_token': base64.b64encode(password_token).decode('utf-8'),
-        'nombre': nombre,
-        'apellido1': apellido1,
-        'apellido2': apellido2,
-        'telefono': telefono,
-        'correo_electronico': correo_electronico,
-        'saldo_disponible': saldo_inicial,
-        'numero_cuenta_cifrado': cuenta_cifrada,
-        'tarjeta_cifrada': tarjeta_cifrada,
-        'fecha_expiracion_cifrada': fecha_expiracion_cifrada,
-        'cvv_cifrado': cvv_cifrado,
-        'salt': base64.b64encode(salt).decode('utf-8'),
-        'salt2': base64.b64encode(salt2).decode('utf-8')
-    }
-    #Diccionario Nonces
-    nonces[dni] = {
-        'nonce_saldo': nonce_saldo,
-        'nonce_cuenta': nonce_cuenta,
-        'nonce_tarjeta': nonce_tarjeta,
-        'nonce_fecha_expiracion_tarjeta': nonce_fecha_expiracion_tarjeta,
-        'nonce_cvv': nonce_cvv
-    }
-
-    guardar_usuarios(usuarios)
-    guardar_nonces(nonces)
-    print(f"El usuario con DNI {dni} se ha registrado correctamente")
-
-def login_usuario(dni, password):
-    usuarios = carga_usuarios()
-    if dni not in usuarios:
-        return False
-    salt = base64.b64decode(usuarios[dni]['salt'] )
-    password_token = base64.b64decode(usuarios[dni]['password_token'])
-    return codificacion.autenticacion(password, password_token, salt)
-
-def nombre_titular(dni):
-    usuarios = carga_usuarios()
-    nombre = usuarios[dni]['nombre']
-    apellido1 = usuarios[dni]['apellido1']
-    apellido2 = usuarios[dni]['apellido2']
-    return f"{nombre} {apellido1} {apellido2}"
