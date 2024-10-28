@@ -42,6 +42,7 @@ class Codificacion:
         return kdf.derive(password.encode())
 
     def cifrar(self, dni, datos_cifrar, clave, nonce):
+
         chacha = ChaCha20Poly1305(clave)
         if nonce is None:
             nonce = os.urandom(12)
@@ -53,12 +54,14 @@ class Codificacion:
         ct = chacha.encrypt(nonce, datos_cifrar, aad)
         ct_b64 = base64.b64encode(ct).decode('utf-8')
         nonce_b64 = base64.b64encode(nonce).decode('utf-8')
+        print("cifrar", dni, datos_cifrar, clave, nonce)
         if nonce_nuevo:
             return nonce_b64, ct_b64
         else:
             return ct_b64
 
     def descifrar(self, dni, ct, clave, nonce):
+        print("descifrar", dni, ct, clave, nonce)
         chacha = ChaCha20Poly1305(clave)
         aad = dni.encode()
         datos_descifrados = chacha.decrypt(nonce, ct, aad)

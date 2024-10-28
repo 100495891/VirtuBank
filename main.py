@@ -1,3 +1,5 @@
+import traceback
+
 from usuario import Usuario
 from acceso_datos import GestorDatos
 from bizum import Bizum
@@ -27,7 +29,9 @@ if __name__ == "__main__":
             telefono = input("\nIntroduzca su telefono: ")
             correo_electronico = input("\nIntroduzca su correo electrónico: ")
             try:
+                # Creamos la clase usuario para la persona que se está registrando
                 usuario = Usuario(dni, password)
+                # Llamamos al método registrar_usuario que guardará la información en un archivo JSON
                 print(usuario.registro_usuario(nombre, apellido1, apellido2, telefono, correo_electronico))
             except ValueError as e:
                 print(f"Error en el registro de usuario: {e}")
@@ -37,11 +41,15 @@ if __name__ == "__main__":
             dni = input("\nIntroduzca su DNI: ")
             password = input("\nIntroduzca su contraseña: ")
             usuario = Usuario(dni, password)
+            # Llamamos al método login_usuario, que comprueba si el usuario existe y si la contraseña es válida
             if usuario.login_usuario():
+                # Creamos la clase para gestionar los datos
                 gestor_datos = GestorDatos(usuario.dni, usuario.password)
+                # Creamos la clase Bizum
                 bizum = Bizum(usuario.dni, usuario.password)
                 print("Sesión iniciada.")
                 cerrar_sesion = False
+                # Creamos un bucle para el menú de opciones
                 while not cerrar_sesion:
                     print("¿Qué quiere hacer?\n")
                     print("1. Revisar saldo\n")
@@ -65,6 +73,7 @@ if __name__ == "__main__":
                     if accion == 1:
                         # Revisar el saldo
                         try:
+                            # Obtenemos el saldo del usuario y lo imprimimos por pantalla
                             saldo = gestor_datos.revisar_datos('saldo_disponible', 'saldo_disponible')
                             print(f"\nSu saldo es {saldo} euros")
                         except Exception as e:
@@ -74,6 +83,7 @@ if __name__ == "__main__":
                         # Ingresar dinero en la cuenta
                         try:
                             cifra = float(input("\nIntroduzca la cantidad que desea ingresar: "))
+                            # El método transacciones se encarga de actualizar el saldo en función de la cifra y el tipo de operación( ingresar o sacar dinero)
                             sol = gestor_datos.transacciones(cifra, '+')
                             print(f"Su dinero se ha ingresado correctamente \n Nuevo saldo disponible: {sol[1]} euros\n")
                         except ValueError:
@@ -83,6 +93,7 @@ if __name__ == "__main__":
                         # Retirar dinero de la cuenta
                         try:
                             cifra = float(input("\nIntroduzca la cantidad que desea retirar: "))
+                            # Realizamos la misma acción pero indicando que es para retirar dinero
                             sol = gestor_datos.transacciones(cifra, '-')
                             print(f"Su dinero se ha retirado correctamente \n Nuevo saldo disponible: {sol[1]} euros\n")
                         except ValueError:
@@ -91,6 +102,7 @@ if __name__ == "__main__":
                     elif accion == 4:
                         # Registrarse en bizum
                         try:
+                            # Este método nos registra metiendo nuestros datos en un JSON de cuentas de Bizum
                             print(bizum.registrarse_bizum())
                         except ValueError as ve:
                             print(f"Error al registrarse en Bizum: {ve}")
@@ -103,8 +115,10 @@ if __name__ == "__main__":
                         telefono_destino = input("\nIntroduzca el teléfono de la persona a la que desea enviar el bizum: ")
                         try:
                             cantidad = float(input("\nIntroduzca la cantidad que desea enviar: "))
+                            # Realiza una serie de comprobaciones y si son correctas envía el dinero
                             print(bizum.realizar_bizum(cantidad, telefono_destino))
                             saldo = gestor_datos.revisar_datos('saldo_disponible', 'saldo_disponible')
+                            print(f"Tu nuevo saldo es {saldo}")
                             
                         except ValueError:
                             print("Cantidad no válida. Por favor, ingrese un número.")
@@ -121,9 +135,11 @@ if __name__ == "__main__":
                             operaciones_pendientes = usuario.carga_json(bizum.ARCHIVO_OPERACIONES_PENDIENTES)
                             if dni in operaciones_pendientes:
                                 print("\nAquí tiene sus operaciones pendientes")
+                                # Revisa si hay bizums pendientes de ser aceptados
                                 bizum.revisar_operaciones_pendientes()
                                 op = input("\n¿Quiere aceptarlas? (y/n): ").lower()
                                 if op == "y":
+                                    # Ejecuta los bizums pendientes actualizando el saldo y el historial de transacciones
                                     print(bizum.cargar_operaciones_pendientes())
                                     saldo = gestor_datos.revisar_datos('saldo_disponible', 'saldo_disponible')
                                     print(f"\nSu saldo es {saldo} euros")
@@ -139,6 +155,9 @@ if __name__ == "__main__":
                             print(f"Error de valor: {ve}")
                         except Exception as e:
                             print(f"Ha ocurrido un error inesperado: {e}")
+                            print(f"Tipo de error: {type(e).__name__}")
+                            print("Traza de error:")
+                            traceback.print_exc()
                         input("Presione Enter para continuar...")
                     elif accion == 8:
                         # Revisar datos de la cuenta
