@@ -28,5 +28,20 @@
         "tarjeta": "6XWD15pdTVZnxR8SeCZJ0lpV0Y2AxirYlaXmPeSDa84=",
         "fecha_expiracion_tarjeta": "zD5zRRyQq2ZkQoljv8RYKeUHw7Ji",
         "cvv": "a+BWwWYhLF/H0Ky5QxT+tIyBxA=="
+    },
+    "02251234V": {
+        "password_token": "xr6HqEdYwRK7xLU//6gnmKjmvF0Gzxrm4Vw3JCuD5EM=",
+        "salt": "7hPZqtGQ5q03YlW23Hjdkw==",
+        "salt2": "P2X4q7pnVY80xAfMt5XrOw==",
+        "nombre": "OyH2zV8KreRpAEZ7AX7kvRCa3iMg",
+        "apellido1": "E76pVtzEDbHbP7eaCjqZxBzhWpnCN8z75ro=",
+        "apellido2": "2eByh5j/S9TYiXVXRr/7swSR3zBeoA==",
+        "telefono": "Ro91iidATQKaIXunC5Bs/XsTmOTzcZRwnQ==",
+        "correo_electronico": "DtcNNoWuYbWqU3WxiywBiepSmAJgcWbTCD7YyYQItehDmkXjNwJN",
+        "saldo_disponible": "KIsNPN7RQyne52jqseEKh6U=",
+        "numero_cuenta": "jAerkwt7hTCp5khkxjo8cG4jg3veXue9XDETyX/yOmnKUswujKwI7Iw=",
+        "tarjeta": "63/gdFNbuXy8bvJMF93Hv28nOMpccYcHgYjw3EZd58g=",
+        "fecha_expiracion_tarjeta": "qJtsU10ifeRus/w5dTwQaBZW758L",
+        "cvv": "hnj6E4SJXx7K7LnNuVyLm71T1Q=="
     }
 }

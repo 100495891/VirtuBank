@@ -8,7 +8,7 @@ class GestorDatos:
 
     def datos_cifrar_descifrar(self, dato_nonces):
         """Cogemos el salt2 del diccionario de usuario y el nonce del dato que queremos descifrar, devolvemos la clave
-        y el nonce, ed decir, todos los datos necesarios para descrifrar un dato """
+        y el nonce, es decir, todos los datos necesarios para descrifrar un dato """
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
         nonces = self.usuario.carga_json(self.usuario.ARCHIVO_NONCES)
         salt2 = base64.b64decode(usuarios[self.usuario.dni]['salt2'])
