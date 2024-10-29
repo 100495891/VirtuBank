@@ -70,9 +70,11 @@ class Bizum:
     def revisar_transacciones_operaciones(self, diccionario, identificador, pw_clave, dni):
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
         salt2 = usuarios[self.usuario.dni]['salt2'].encode()
+        # Recorre el diccionario transacciones en el que hay una lista por cada persona con la que tiene alguna transación
+        # En esa lista hay un diccionario para cada transacción
         for persona, list in diccionario[identificador]['transacciones'].items():
             print(f"\nBizums con: {persona}")
-
+            # Recorre todas las transacciones que ha tenido con cada usuario
             for j, transaccion in enumerate(list, start = 1):
                 clave = self.codificacion.generar_clave_chacha(pw_clave, salt2)
                 dinero_cifrado = base64.b64decode(transaccion['dinero'])
@@ -103,10 +105,11 @@ class Bizum:
                 'telefono' : telefono_destino,
                 'transacciones': {}
             }
-        # Si el telefono origen no tiene más operaciones
+        # Si el telefono origen no tiene otras operaciones pendientes para ese destinatario crea una lista vacía
         if self.telefono not in operaciones_pendientes[dni]['transacciones']:
             operaciones_pendientes[dni]['transacciones'][self.telefono] = []
 
+        # Introducimos la transacción en operaciones pendientes
         operaciones_pendientes[dni]['transacciones'][self.telefono].append({'dinero': cantidad_cifrada,
                                                                            'fecha': datetime.now().strftime(
                                                                                "%d/%m/%Y %H:%M:%S"),
@@ -119,28 +122,34 @@ class Bizum:
         salt2 = usuarios[self.usuario.dni]['salt2'].encode()
         bizums = self.usuario.carga_json(self.ARCHIVO_BIZUM)
         cantidad = 0
+        # Recorremos cada uno de los usuarios que nos ha enviado dinero
         for telefono_origen, transacciones in operaciones_pendientes[self.usuario.dni]['transacciones'].items():
+            # Ejecutamos el bucle para cada Bizum recibido de cada usuario
             for transaccion in transacciones:
                 dinero_cifrado = base64.b64decode(transaccion['dinero'])
                 fecha = transaccion['fecha']
                 nonce = base64.b64decode(transaccion['nonce'])
-
+                # Generamos la clave con el salt de la persona que nos ha enviado el dinero y posteriormente desciframos el dinero enviado
                 clave = self.codificacion.generar_clave_chacha(self.master_key, salt2)
                 dinero = self.codificacion.descifrar(self.usuario.dni, dinero_cifrado, clave, nonce)
-
+                # Generamos la clave con nuestro salt y ciframos el dato
                 clave2 = self.codificacion.generar_clave_chacha(self.usuario.password, salt2)
                 nonce2, dinero_cifrado2 = self.codificacion.cifrar(self.usuario.dni, dinero, clave2, None)
 
+                # Si ese usuario no nos había enviado dinero antes guardamos una lista para futuras transacciones
                 if telefono_origen not in bizums[self.telefono]['transacciones']:
                     bizums[self.telefono]['transacciones'][telefono_origen] = []
+                # Guardamos la transacción realizada
                 bizums[self.telefono]['transacciones'][telefono_origen].append({'dinero': dinero_cifrado2,
                                                                         'fecha': fecha,
                                                                         'nonce': nonce2})
                 cantidad += float(dinero)
-            del operaciones_pendientes[self.usuario.dni]
-            self.usuario.guardar_json(self.ARCHIVO_OPERACIONES_PENDIENTES, operaciones_pendientes)
-            self.usuario.guardar_json(self.ARCHIVO_BIZUM, bizums)
-            self.gestor_datos.transacciones(cantidad, '+')
+        # Borramos del diccionario de operaciones pendientes del usuario actual
+        del operaciones_pendientes[self.usuario.dni]
+        # Actualizamos los datos
+        self.usuario.guardar_json(self.ARCHIVO_OPERACIONES_PENDIENTES, operaciones_pendientes)
+        self.usuario.guardar_json(self.ARCHIVO_BIZUM, bizums)
+        self.gestor_datos.transacciones(cantidad, '+')
         return "Operaciones guardadas con éxito"
 
     def eliminar_cuenta(self):

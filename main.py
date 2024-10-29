@@ -126,6 +126,7 @@ if __name__ == "__main__":
                     elif accion == 6:
                         # Revisar las transacciones
                         try:
+                            # Imprime todas sus transacciones
                             bizum.revisar_transacciones()
                         except Exception as e:
                             print(f"Error al revisar transacciones: {e}")
