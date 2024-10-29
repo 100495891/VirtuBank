@@ -22,8 +22,11 @@ class GestorDatos:
     def revisar_datos(self, dato_usuarios, dato_nonces):
         """Método para revisar datos de un usuario"""
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
+        # Después de acceder al JSON desciframos la clave y el nonce
         clave, nonce = self.datos_cifrar_descifrar(dato_nonces)
+        # Decodificamos el dato de Base64 a Bytes
         dato_cifrado = base64.b64decode(usuarios[self.usuario.dni][dato_usuarios])
+        # Desciframos los datos
         dato_descifrado = self.codificacion.descifrar(self.usuario.dni, dato_cifrado, clave, nonce)
         return dato_descifrado
 
@@ -31,13 +34,17 @@ class GestorDatos:
     def actualizar_datos(self, dato_actualizado, dato_usuarios, dato_nonces):
         """Actualizamos el json con un nuevo dato"""
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
+        # Con este método obtenemos la clave y el nonce necesarios para cifrar el dato
         clave, nonce = self.datos_cifrar_descifrar(dato_nonces)
+        # Ciframos el dato y después lo guardamos en el JSON
         usuarios[self.usuario.dni][dato_usuarios] = self.codificacion.cifrar(self.usuario.dni, str(dato_actualizado), clave, nonce)
         self.usuario.guardar_json(self.usuario.ARCHIVO_USUARIOS, usuarios)
 
 
     def transacciones(self, cifra, operacion):
+        # Obtenemos el saldo descifrado
         saldo = self.revisar_datos('saldo_disponible', 'saldo_disponible')
+        # Si la operación es de ingresar (+) se suma la cifra al saldo y sino se resta
         if operacion == '+':
             saldo = float(saldo) + cifra
 
@@ -47,7 +54,7 @@ class GestorDatos:
                 return False, saldo
             else:
                 saldo = float(saldo) - cifra
-
+        # Actualizamos el saldo del JSON
         self.actualizar_datos(saldo, 'saldo_disponible', 'saldo_disponible')
         return True, saldo
 

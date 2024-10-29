@@ -36,27 +36,33 @@ class Bizum:
         bizums = self.usuario.carga_json(self.ARCHIVO_BIZUM)
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
         salt2 = usuarios[self.usuario.dni]['salt2'].encode()
+        # Comprobamos que el número no sea el mismo que el del usuario que envía el bizum
         if self.telefono == telefono_destino:
             return "Error: No se puede enviar un bizum a usted mismo"
+        # Comprobamos que el que envía el dinero esté registrado en bizum
         if self.telefono not in bizums:
             return "Error: no está registrado en bizum."
-
+        # Comprobamos que el que recibe el dinero esté registrado en bizum
         if telefono_destino not in bizums:
             return "Error: el usuario al que quiere envíar el bizum no está registrado en bizum."
         dni_destinatario = bizums[telefono_destino]['dni']
 
-
+        # Comprobamos que se realice correctamente la transacción
         if self.gestor_datos.transacciones(cantidad, '-')[0]:
-
+            # Ciframos la contraseña con el algoritmo PBKDF2HMAC que usaremos como clave para cifrar los datos
             clave = self.codificacion.generar_clave_chacha(self.usuario.password, salt2)
+            # Ciframos el nonce y la cantidad que hemos enviado
             nonce_cantidad_origen, cantidad_cifrada_origen = self.codificacion.cifrar(self.usuario.dni, str(-cantidad), clave, None)
+            # Si no se ha realizado un bizum antes con esta cuenta a un número determinado se crea una lista para guardar todas las transacciones futuras
             if telefono_destino not in bizums[self.telefono]['transacciones']:
                 bizums[self.telefono]['transacciones'][telefono_destino] = []
+            # Guardamos los datos de la transacción
             bizums[self.telefono]['transacciones'][telefono_destino].append({'dinero': cantidad_cifrada_origen,
                                                                               'fecha': datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                                                                               'nonce': nonce_cantidad_origen})
-
+            # Metemos esta transacción en operaciones pendientes en la cuenta del usuario
             self.crear_operacion_pendiente(dni_destinatario, cantidad, telefono_destino)
+            # Actualizamos el JSON
             self.usuario.guardar_json(self.ARCHIVO_BIZUM, bizums)
             return "Su bizum se ha realizado con éxito."
         return "No se ha podido hacer el bizum"
@@ -87,13 +93,17 @@ class Bizum:
         operaciones_pendientes = self.usuario.carga_json(self.ARCHIVO_OPERACIONES_PENDIENTES)
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
         salt2_destino = usuarios[dni]['salt2'].encode()
+        # Generamos la clave haciendo uso de la master key
         clave = self.codificacion.generar_clave_chacha(self.master_key, salt2_destino)
+        # Ciframos la cantidad recibida y el nonce de ese dato cifrado
         nonce_cantidad, cantidad_cifrada = self.codificacion.cifrar(dni, str(+cantidad), clave, None)
-        if self.telefono not in operaciones_pendientes:
+        # Si no existe el dni de destino en operaciones pendientes crea un diccionario y lo introduce
+        if dni not in operaciones_pendientes:
             operaciones_pendientes[dni] = {
                 'telefono' : telefono_destino,
                 'transacciones': {}
             }
+        # Si el telefono origen no tiene más operaciones
         if self.telefono not in operaciones_pendientes[dni]['transacciones']:
             operaciones_pendientes[dni]['transacciones'][self.telefono] = []
 

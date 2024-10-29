@@ -117,6 +117,7 @@ class Usuario:
             usuarios = self.carga_json(self.ARCHIVO_USUARIOS)
             if self.dni not in usuarios:
                 return False
+            # Decodificamos el salt y la contraseña para pasar de Base64 a Bytes
             salt = base64.b64decode(usuarios[self.dni]['salt'] )
             password_token = base64.b64decode(usuarios[self.dni]['password_token'])
             return self.codificacion.autenticacion(self.password, password_token, salt)
