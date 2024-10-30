@@ -51,7 +51,7 @@ class Usuario:
 
     def cifrar_datos(self, clave, datos):
         # Cifra todos los datos del usuario y los devuelve en un diccionario
-        return {key: self.codificacion.cifrar(self.dni, valor, clave, None) for key, valor in datos.items()}
+        return {key: self.codificacion.cifrar(self.dni, valor, clave) for key, valor in datos.items()}
 
     def registro_usuario(self, nombre, apellido1, apellido2, telefono, correo_electronico):
         try:
@@ -69,7 +69,7 @@ class Usuario:
             salt = os.urandom(16)
             salt2 = os.urandom(16)
 
-            #Codificamos la contraseña del usuario (en bytes)
+            # Derivamos la contraseña del usuario (en bytes)
             password_token = self.codificacion.registro(self.password, salt)
 
             # Datos del usuario sin cifrar

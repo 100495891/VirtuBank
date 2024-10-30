@@ -1,4 +1,3 @@
-import traceback
 
 from usuario import Usuario
 from acceso_datos import GestorDatos
@@ -156,9 +155,6 @@ if __name__ == "__main__":
                             print(f"Error de valor: {ve}")
                         except Exception as e:
                             print(f"Ha ocurrido un error inesperado: {e}")
-                            print(f"Tipo de error: {type(e).__name__}")
-                            print("Traza de error:")
-                            traceback.print_exc()
                         input("Presione Enter para continuar...")
                     elif accion == 8:
                         # Revisar datos de la cuenta

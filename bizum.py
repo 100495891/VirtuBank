@@ -52,7 +52,7 @@ class Bizum:
             # Ciframos la contraseña con el algoritmo PBKDF2HMAC que usaremos como clave para cifrar los datos
             clave = self.codificacion.generar_clave_chacha(self.usuario.password, salt2)
             # Ciframos el nonce y la cantidad que hemos enviado
-            nonce_cantidad_origen, cantidad_cifrada_origen = self.codificacion.cifrar(self.usuario.dni, str(-cantidad), clave, None)
+            nonce_cantidad_origen, cantidad_cifrada_origen = self.codificacion.cifrar(self.usuario.dni, str(-cantidad), clave)
             # Si no se ha realizado un bizum antes con esta cuenta a un número determinado se crea una lista para guardar todas las transacciones futuras
             if telefono_destino not in bizums[self.telefono]['transacciones']:
                 bizums[self.telefono]['transacciones'][telefono_destino] = []
@@ -98,7 +98,7 @@ class Bizum:
         # Generamos la clave haciendo uso de la master key
         clave = self.codificacion.generar_clave_chacha(self.master_key, salt2_destino)
         # Ciframos la cantidad recibida y el nonce de ese dato cifrado
-        nonce_cantidad, cantidad_cifrada = self.codificacion.cifrar(dni, str(+cantidad), clave, None)
+        nonce_cantidad, cantidad_cifrada = self.codificacion.cifrar(dni, str(+cantidad), clave)
         # Si no existe el dni de destino en operaciones pendientes crea un diccionario y lo introduce
         if dni not in operaciones_pendientes:
             operaciones_pendientes[dni] = {
@@ -134,7 +134,7 @@ class Bizum:
                 dinero = self.codificacion.descifrar(self.usuario.dni, dinero_cifrado, clave, nonce)
                 # Generamos la clave con nuestro salt y ciframos el dato
                 clave2 = self.codificacion.generar_clave_chacha(self.usuario.password, salt2)
-                nonce2, dinero_cifrado2 = self.codificacion.cifrar(self.usuario.dni, dinero, clave2, None)
+                nonce2, dinero_cifrado2 = self.codificacion.cifrar(self.usuario.dni, dinero, clave2)
 
                 # Si ese usuario no nos había enviado dinero antes guardamos una lista para futuras transacciones
                 if telefono_origen not in bizums[self.telefono]['transacciones']:

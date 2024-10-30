@@ -46,15 +46,11 @@ class Codificacion:
         # Derivamos la contraseña con el algoritmo PBKDF2HMAC inicializado antes
         return kdf.derive(password.encode())
 
-    def cifrar(self, dni, datos_cifrar, clave, nonce):
+    def cifrar(self, dni, datos_cifrar, clave):
         # Inicializamos ChaCha20 para poder cifrar
         chacha = ChaCha20Poly1305(clave)
         # Si no se proporciona eñ nonce, entonces creamos uno nuevo para ese dato
-        if nonce is None:
-            nonce = os.urandom(12)
-            nonce_nuevo = True
-        else:
-            nonce_nuevo = False
+        nonce = os.urandom(12)
         # Convertimos los datos a Bytes
         datos_cifrar = datos_cifrar.encode()
         aad = dni.encode()
@@ -63,10 +59,8 @@ class Codificacion:
         # Codificamos el texto cifrado y el nonce en Base64
         ct_b64 = base64.b64encode(ct).decode('utf-8')
         nonce_b64 = base64.b64encode(nonce).decode('utf-8')
-        if nonce_nuevo:
-            return nonce_b64, ct_b64
-        else:
-            return ct_b64
+
+        return nonce_b64, ct_b64
 
     def descifrar(self, dni, ct, clave, nonce):
         chacha = ChaCha20Poly1305(clave)

@@ -34,11 +34,15 @@ class GestorDatos:
     def actualizar_datos(self, dato_actualizado, dato_usuarios, dato_nonces):
         """Actualizamos el json con un nuevo dato"""
         usuarios = self.usuario.carga_json(self.usuario.ARCHIVO_USUARIOS)
+        nonces = self.usuario.carga_json(self.usuario.ARCHIVO_NONCES)
         # Con este método obtenemos la clave y el nonce necesarios para cifrar el dato
-        clave, nonce = self.datos_cifrar_descifrar(dato_nonces)
+        clave = self.datos_cifrar_descifrar(dato_nonces)[0]
         # Ciframos el dato y después lo guardamos en el JSON
-        usuarios[self.usuario.dni][dato_usuarios] = self.codificacion.cifrar(self.usuario.dni, str(dato_actualizado), clave, nonce)
+        nonce, dato = self.codificacion.cifrar(self.usuario.dni, str(dato_actualizado), clave)
+        usuarios[self.usuario.dni][dato_usuarios] = dato
+        nonces[self.usuario.dni][dato_nonces] = nonce
         self.usuario.guardar_json(self.usuario.ARCHIVO_USUARIOS, usuarios)
+        self.usuario.guardar_json(self.usuario.ARCHIVO_NONCES, nonces)
 
 
     def transacciones(self, cifra, operacion):
