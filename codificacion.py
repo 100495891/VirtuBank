@@ -49,7 +49,7 @@ class Codificacion:
     def cifrar(self, dni, datos_cifrar, clave):
         # Inicializamos ChaCha20 para poder cifrar
         chacha = ChaCha20Poly1305(clave)
-        # Si no se proporciona eñ nonce, entonces creamos uno nuevo para ese dato
+        # Si no se proporciona el nonce, entonces creamos uno nuevo para ese dato
         nonce = os.urandom(12)
         # Convertimos los datos a Bytes
         datos_cifrar = datos_cifrar.encode()
