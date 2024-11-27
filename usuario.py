@@ -72,6 +72,13 @@ class Usuario:
             # Derivamos la contraseña del usuario (en bytes)
             password_token = self.codificacion.registro(self.password, salt)
 
+            # Generamos la clave privada RSA que tendrá el usuario para firmar
+            clave_privada = self.codificacion.generar_clave_privada_rsa()
+
+            # La ciframos y serializamos con la contraseña
+            clave_privada_codificada = self.codificacion.cifrar_clave_privada(clave_privada, self.password)
+
+
             # Datos del usuario sin cifrar
             datos = {
                 'nombre': nombre,
@@ -96,9 +103,10 @@ class Usuario:
                 'password_token': base64.b64encode(password_token).decode('utf-8'),
                 'salt': base64.b64encode(salt).decode('utf-8'),
                 'salt2': base64.b64encode(salt2).decode('utf-8'),
+                'clave_privada': clave_privada_codificada,
                 **{k: v[1] for k, v in datos_cifrados.items()}
             } # v es una tupla (nonce, dato) por eso cogemos la posicion 1 (dato)
-
+            
             # Almacenamiento de nonces
             nonces[self.dni] = {k: v[0] for k, v in datos_cifrados.items()}
 
