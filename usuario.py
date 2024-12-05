@@ -2,6 +2,7 @@ import json, os, base64, random
 from codificacion import Codificacion
 from cuenta import CuentaBancaria
 from validaciones import Validaciones
+import firmas_certificados
 
 class Usuario:
 
@@ -52,6 +53,28 @@ class Usuario:
     def cifrar_datos(self, clave, datos):
         # Cifra todos los datos del usuario y los devuelve en un diccionario
         return {key: self.codificacion.cifrar(self.dni, valor, clave) for key, valor in datos.items()}
+    
+    def generar_guardar_clave_privada(self):
+        # Generamos la clave privada RSA que tendrá el usuario para firmar
+        clave_privada = firmas_certificados.generar_clave_privada_rsa()
+        #Deberíamos usar una password distinta pero para simplificar usamos la propia contraseña del usuario
+        pwd_clave_privada = self.password
+        # La ciframos y serializamos con la contraseña
+        clave_privada_codificada = firmas_certificados.cifrar_clave_privada(clave_privada, pwd_clave_privada)
+        # Guardamos la clave privada en un .pem
+        filename = f"certificados_openssl/claves/key_{self.dni}.pem"
+        with open(filename, 'wb') as pem_file:
+            pem_file.write(clave_privada_codificada)
+
+        return clave_privada
+
+    def generar_guardar_firma(self, mensaje_firmar, clave_privada):
+        firma = firmas_certificados.firmar_mensaje(clave_privada, mensaje_firmar)
+
+        # guardamos la firma
+        with open(f"certificados_openssl/firmas/firma_{self.dni}.pem", "wb") as firma_pem:
+            firma_pem.write(firma)
+        
 
     def registro_usuario(self, nombre, apellido1, apellido2, telefono, correo_electronico):
         try:
@@ -71,12 +94,6 @@ class Usuario:
 
             # Derivamos la contraseña del usuario (en bytes)
             password_token = self.codificacion.registro(self.password, salt)
-
-            # Generamos la clave privada RSA que tendrá el usuario para firmar
-            clave_privada = self.codificacion.generar_clave_privada_rsa()
-
-            # La ciframos y serializamos con la contraseña
-            clave_privada_codificada = self.codificacion.cifrar_clave_privada(clave_privada, self.password)
 
 
             # Datos del usuario sin cifrar
@@ -103,7 +120,6 @@ class Usuario:
                 'password_token': base64.b64encode(password_token).decode('utf-8'),
                 'salt': base64.b64encode(salt).decode('utf-8'),
                 'salt2': base64.b64encode(salt2).decode('utf-8'),
-                'clave_privada': clave_privada_codificada,
                 **{k: v[1] for k, v in datos_cifrados.items()}
             } # v es una tupla (nonce, dato) por eso cogemos la posicion 1 (dato)
             

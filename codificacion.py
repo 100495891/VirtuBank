@@ -2,9 +2,9 @@ import base64
 import os
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
-from cryptography.hazmat.primitives import hashes, serialization
+
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
+
 
 class Codificacion:
     def registro(self, password, salt):
@@ -68,58 +68,3 @@ class Codificacion:
         datos_descifrados = chacha.decrypt(nonce, ct, aad)
         return datos_descifrados.decode('utf-8')
 
-    def generar_clave_privada_rsa(self):
-        # Generamos la clave privada
-        clave_privada = rsa.generate_private_key(
-            public_exponent=65537,
-            key_size=2048,
-        )
-        return clave_privada
-
-    def cifrar_clave_privada(self, clave_privada, password):
-        # Ciframos la clave privada con la contraseña del usuario
-        pem = clave_privada.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.BestAvailableEncryption(password)
-        )
-        return pem
-
-    def serializar_clave_publica(self, clave_privada):
-        # Generamos la clave pública a partir de la privada
-        clave_publica = clave_privada.public_key()
-        pem = clave_publica.public_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
-        )
-        return pem
-
-    def firmar_mensaje(self, clave_privada, mensaje):
-        # Firmamos el mensaje con la clave privada del usuario
-        firma = clave_privada.sign(
-            mensaje,
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()),
-                salt_length=padding.PSS.MAX_LENGTH
-            ),
-            hashes.SHA256()
-        )
-        return base64.b64encode(firma).decode('utf-8')
-
-    def verificar_firma(self, clave_publica_pem, mensaje, firma):
-        # Verificamos la firma con la clave pública de la persona que firmó (la cogemos del certificado)
-        clave_publica = serialization.load_pem_public_key(clave_publica_pem)
-        firma = base64.b64decode(firma)
-        try:
-            clave_publica.verify(
-                firma,
-                mensaje,
-                padding.PSS(
-                    mgf=padding.MGF1(hashes.SHA256()),
-                    salt_length=padding.PSS.MAX_LENGTH
-                ),
-                hashes.SHA256()
-            )
-            return True
-        except Exception:
-            return False
