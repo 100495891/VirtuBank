@@ -51,6 +51,7 @@ def verificar_firma(clave_publica, mensaje, firma):
             ),
             hashes.SHA256()
         )
+        print("La firma se ha verificado correctamente")
     except InvalidSignature:
         print("Error: Firma inválida")
         traceback.print_exc()
@@ -114,8 +115,10 @@ def verificaciones(dni, telefono):
     clave_publica_certAC1 = certAC1.public_key()
     # Verificamos que certUser ha sido firmado por AC1
     verificar_certificado(clave_publica_certAC1, certUser)
+    print("Verificación del certificado del usuario correcta")
     # Verificamos que certAC1 ha sido firmado por él mismo
     verificar_certificado(clave_publica_certAC1, certAC1)
+    print("Verificación de la Autoridad de Certificación correcta")
 
 
 

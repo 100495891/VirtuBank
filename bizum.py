@@ -31,6 +31,7 @@ class Bizum:
 
         # Firmamos el número de teléfono de la persona que se quiere registrar en bizum
         self.usuario.generar_guardar_firma(self.telefono, clave_privada)
+        print("Su número de teléfono se ha firmado correctamente")
 
         # Hacemos la petición del certificado (csr)
         firmas_certificados.generar_csr(clave_privada, self.dni)
@@ -40,7 +41,7 @@ class Bizum:
 
         # Ahora verificamos la firma, el certificado del usuario y el certificado raiz
         firmas_certificados.verificaciones(self.dni, self.telefono)
-
+        print("Todo ha sido correctamente certificado")
 
         bizums[self.telefono] = {
             'dni' : self.usuario.dni,
