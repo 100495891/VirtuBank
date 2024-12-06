@@ -1,9 +1,11 @@
 from cryptography import x509
+from cryptography.exceptions import InvalidSignature
 from cryptography.x509 import load_pem_x509_certificates
 from cryptography.hazmat._oid import NameOID
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 import base64
+import traceback
 
 
 def generar_clave_privada_rsa():
@@ -19,56 +21,51 @@ def cifrar_clave_privada(clave_privada, password):
     pem = clave_privada.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.BestAvailableEncryption(password)
-    )
-    return pem
-
-def serializar_clave_publica(clave_privada):
-    # Generamos la clave pública a partir de la privada
-    clave_publica = clave_privada.public_key()
-    pem = clave_publica.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
+        encryption_algorithm=serialization.BestAvailableEncryption(password.encode("utf-8"))
     )
     return pem
 
 def firmar_mensaje(clave_privada, mensaje):
     # Firmamos el mensaje con la clave privada del usuario
+    mensaje_bytes = mensaje.encode("utf-8")
     firma = clave_privada.sign(
-        mensaje,
+        mensaje_bytes,
         padding.PSS(
             mgf=padding.MGF1(hashes.SHA256()),
             salt_length=padding.PSS.MAX_LENGTH
         ),
         hashes.SHA256()
     )
-    return base64.b64encode(firma).decode('utf-8')
+    return base64.b64encode(firma)
 
-def verificar_firma(clave_publica_pem, mensaje, firma):
+def verificar_firma(clave_publica, mensaje, firma):
     # Verificamos la firma con la clave pública de la persona que firmó (la cogemos del certificado)
-    clave_publica = serialization.load_pem_public_key(clave_publica_pem)
-    firma = base64.b64decode(firma)
+    firma_decod = base64.b64decode(firma)
     try:
         clave_publica.verify(
-            firma,
-            mensaje,
+            firma_decod,
+            mensaje.encode("utf-8"),
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH
             ),
             hashes.SHA256()
         )
+    except InvalidSignature:
+        print("Error: Firma inválida")
+        traceback.print_exc()
     except Exception as e:
-        print(f"Error al verificar la firma: {e}") 
+        print(f"Error al verificar la firma: {e}")
+        traceback.print_exc()
     
-def generar_csr(clave_privada):
+def generar_csr(clave_privada, dni):
     # Generamos un CSR
     csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, "ES"),
         x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "Madrid"),
         x509.NameAttribute(NameOID.LOCALITY_NAME, "Madrid"),
-        x509.NameAttribute(NameOID.ORGANIZATION_NAME, "VirtuBank"),
-        x509.NameAttribute(NameOID.COMMON_NAME, "virtubank.com"),
+        x509.NameAttribute(NameOID.ORGANIZATION_NAME, f"{dni}"),
+        x509.NameAttribute(NameOID.COMMON_NAME, "."),
     ])).add_extension(
         x509.SubjectAlternativeName([
             x509.DNSName("virtubank.com"),
@@ -99,7 +96,7 @@ def verificar_certificado(clave_publica_cert_raiz, cert_a_verificar):
         print(f"Error al verificar la firma del certificado del usuario: {e}")    
 
 
-def verificaciones(dni):
+def verificaciones(dni, telefono):
     # Creamos el objeto del certificado del usuario
     with open(f"certificados_openssl/certificados/cert_{dni}.pem", "rb") as cert_pem:
         certificados = load_pem_x509_certificates(cert_pem.read())
@@ -107,8 +104,8 @@ def verificaciones(dni):
 
     clave_publica_certUser = certUser.public_key()
     with open(f"certificados_openssl/firmas/firma_{dni}.pem", "rb") as firma_pem:
-        firma = firma_pem.read()
-    verificar_firma(clave_publica_certUser, firma)
+        firma = firma_pem.read().strip()
+    verificar_firma(clave_publica_certUser, telefono, firma)
     
     with open(f"certificados_openssl/AC1/ac1cert.pem", "rb") as cert_pem:
         certificados = load_pem_x509_certificates(cert_pem.read())

@@ -1,32 +1,17 @@
 {
-    "02597751Q": {
-        "password_token": "/2UlV2T4/5PPUnopZSD24dLLUypFxZ70gJ6N7sitvwM=",
-        "salt": "4fBaVHImTXtfSThDbLqQ7A==",
-        "salt2": "/FjLNab2OZJngVDnxuzPGQ==",
-        "nombre": "GRN2JtUw892HWn1t23CF0fN45hI+",
-        "apellido1": "C4u1AzYxFjDVEIoGf22QGwIKS2i62ygg",
-        "apellido2": "LW3JKtTtRVEaf9i7sxY1cyIcLnVj7oi61ow=",
-        "telefono": "7KSeVHPVltboYR5kRL7h4+AIABkL7hoiFg==",
-        "correo_electronico": "/VUYgWB41s45KKxgzHv+5uAwncXhOcakqA8W",
-        "saldo_disponible": "y3rVueEmaVlhl0r+6Tf6kHi2ycAG",
-        "numero_cuenta": "MqT/EsKwXZ7D3ImZvSIgUkXK0O3Gqra/gywP7eIJMOBx/R8OB91IQXE=",
-        "tarjeta": "6YAPIUAVZYo7s0CVNA29DdKTZ7FM+u+WWQaUjnXnnrE=",
-        "fecha_expiracion_tarjeta": "+fLeIZCY5fLPFDAbREHfmZo//PSc",
-        "cvv": "ehRUpk614looF9mDvBgFGifGzQ=="
-    },
     "02597700B": {
-        "password_token": "5H3OpD3XA6hQUX9cM+kCWb2JARQijnndj0FCSFaDkyA=",
-        "salt": "Lhlz1DvVBvRa8iqRO4Y6LA==",
-        "salt2": "OsJgqY0Gbf6hf6FdeMvFtQ==",
-        "nombre": "rLqWhoTIPqdUyE+aHzk59f4=",
-        "apellido1": "um9kAkXieEa3aEXkATBILbg=",
-        "apellido2": "MbPo0W+tZnMHzLngKFCe+nM=",
-        "telefono": "j26xnHpvqwxfBiIweWT/fM0CN7tq46N4rQ==",
-        "correo_electronico": "IP85ZHOjtiWL5U5NUTqBCVao7Ary9T9fporR",
-        "saldo_disponible": "UB8EcvMPGp7c6CPgBMtpnCFDFok=",
-        "numero_cuenta": "+YjhHpP2TmKx0bGhvozXeivhHB6TZg10H/w1NYVrmRv0YGLtrt9CF+0=",
-        "tarjeta": "YOHaBJS/weQhtjn+9uFztF68s2OQvKsZiVR0yMTgR0I=",
-        "fecha_expiracion_tarjeta": "9CBCFsAjbuj/cp7PRFlKbmg7vJzF",
-        "cvv": "sovKRHiqJGVIpH2srLRouUfMBA=="
+        "password_token": "t7EpHa6PczIPE2/jRdgaSE5sU+dvYiOtJroRoHN7Mzc=",
+        "salt": "lJgMjpYtp+5gJYMj9bY+8w==",
+        "salt2": "CDzUOtk6Hpp0CDbDqA5bMg==",
+        "nombre": "RIdH7/eYwiyfE/RsyorSy3U=",
+        "apellido1": "WITNmy9dKz/nt8AsZSL1UJ8=",
+        "apellido2": "vlaX4/AdjGWwGGSoPzopRL8=",
+        "telefono": "c6lyiX2rmmREg5RXjG57XPbDkyCpEEQHnw==",
+        "correo_electronico": "7qDB7NTXVWJu9qC4gdNzzPlfE4OkRAX8J0d3",
+        "saldo_disponible": "3LZdw7517Yq1IQ3f2Kl0R0o=",
+        "numero_cuenta": "WIA+j7S2qEE5d+evK3cbM9u3R3u16LhHNWLf2i3F5YC+Z6rR9Vn1oz8=",
+        "tarjeta": "4jeO9gLEKLpWeO77ENAWvF1st3N7GhcXHY/DH3XmLho=",
+        "fecha_expiracion_tarjeta": "ZOHoTtcjoiFkIXF1bdhPcBRQnla1",
+        "cvv": "T1cR6ixz2fL+3pE7COSzPxdeEQ=="
     }
 }

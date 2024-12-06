@@ -3,6 +3,7 @@ from datetime import datetime
 from codificacion import Codificacion
 from usuario import Usuario
 from acceso_datos import GestorDatos
+import firmas_certificados
 
 class Bizum:
     #DESCARGAR DATOS USUARIOS
@@ -15,6 +16,7 @@ class Bizum:
         self.gestor_datos = GestorDatos(dni, password)
         self.telefono = self.gestor_datos.revisar_datos('telefono', 'telefono')
         self.codificacion = Codificacion()
+        self.dni = dni
 
     def registrarse_bizum(self):
         bizums = self.usuario.carga_json(self.ARCHIVO_BIZUM)
@@ -23,6 +25,22 @@ class Bizum:
 
         if self.telefono in bizums:
             return "Error: Ya está registrado/a en bizum"
+
+        # Vamos a aplicar aquí la firma y los certificados
+        clave_privada = self.usuario.generar_guardar_clave_privada()
+
+        # Firmamos el número de teléfono de la persona que se quiere registrar en bizum
+        self.usuario.generar_guardar_firma(self.telefono, clave_privada)
+
+        # Hacemos la petición del certificado (csr)
+        firmas_certificados.generar_csr(clave_privada, self.dni)
+
+        # Ahora firmamos el certificado manualmente con openSSL
+        input("Presione Enter cuando esté el certificado firmado...")
+
+        # Ahora verificamos la firma, el certificado del usuario y el certificado raiz
+        firmas_certificados.verificaciones(self.dni, self.telefono)
+
 
         bizums[self.telefono] = {
             'dni' : self.usuario.dni,
@@ -72,10 +90,10 @@ class Bizum:
         salt2 = usuarios[self.usuario.dni]['salt2'].encode()
         # Recorre el diccionario transacciones en el que hay una lista por cada persona con la que tiene alguna transación
         # En esa lista hay un diccionario para cada transacción
-        for persona, list in diccionario[identificador]['transacciones'].items():
+        for persona, lista in diccionario[identificador]['transacciones'].items():
             print(f"\nBizums con: {persona}")
             # Recorre todas las transacciones que ha tenido con cada usuario
-            for j, transaccion in enumerate(list, start = 1):
+            for j, transaccion in enumerate(lista, start = 1):
                 clave = self.codificacion.generar_clave_chacha(pw_clave, salt2)
                 dinero_cifrado = base64.b64decode(transaccion['dinero'])
                 nonce = base64.b64decode(transaccion['nonce'])
