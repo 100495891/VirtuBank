@@ -53,11 +53,11 @@ def firmar_mensaje(clave_privada, mensaje):
     )
     return base64.b64encode(firma)
 
-def generar_guardar_firma(mensaje_firmar, clave_privada):
+def generar_guardar_firma(mensaje_firmar, clave_privada, dni):
     firma = firmar_mensaje(clave_privada, mensaje_firmar)
 
     # guardamos la firma
-    with open(f"certificados_openssl/firmas/firma_{self.dni}.pem", "wb") as firma_pem:
+    with open(f"certificados_openssl/firmas/firma_{dni}.pem", "wb") as firma_pem:
         firma_pem.write(firma)
 
 def verificar_firma(clave_publica, mensaje, firma):
