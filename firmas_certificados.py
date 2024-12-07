@@ -25,6 +25,21 @@ def cifrar_clave_privada(clave_privada, password):
     )
     return pem
 
+def generar_guardar_clave_privada(dni, password):
+    # Generamos la clave privada RSA que tendrá el usuario para firmar
+    clave_privada = generar_clave_privada_rsa()
+    # Deberíamos usar una password distinta pero para simplificar usamos la propia contraseña del usuario
+    pwd_clave_privada = password
+    # La ciframos y serializamos con la contraseña
+    clave_privada_codificada = cifrar_clave_privada(clave_privada, pwd_clave_privada)
+    # Guardamos la clave privada en un .pem
+    filename = f"certificados_openssl/claves/key_{dni}.pem"
+    with open(filename, 'wb') as pem_file:
+        pem_file.write(clave_privada_codificada)
+
+    return clave_privada
+
+
 def firmar_mensaje(clave_privada, mensaje):
     # Firmamos el mensaje con la clave privada del usuario
     mensaje_bytes = mensaje.encode("utf-8")
@@ -37,6 +52,13 @@ def firmar_mensaje(clave_privada, mensaje):
         hashes.SHA256()
     )
     return base64.b64encode(firma)
+
+def generar_guardar_firma(mensaje_firmar, clave_privada):
+    firma = firmar_mensaje(clave_privada, mensaje_firmar)
+
+    # guardamos la firma
+    with open(f"certificados_openssl/firmas/firma_{self.dni}.pem", "wb") as firma_pem:
+        firma_pem.write(firma)
 
 def verificar_firma(clave_publica, mensaje, firma):
     # Verificamos la firma con la clave pública de la persona que firmó (la cogemos del certificado)

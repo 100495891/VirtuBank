@@ -17,6 +17,7 @@ class Bizum:
         self.telefono = self.gestor_datos.revisar_datos('telefono', 'telefono')
         self.codificacion = Codificacion()
         self.dni = dni
+        self.password = password
 
     def registrarse_bizum(self):
         bizums = self.usuario.carga_json(self.ARCHIVO_BIZUM)
@@ -27,10 +28,10 @@ class Bizum:
             return "Error: Ya está registrado/a en bizum"
 
         # Vamos a aplicar aquí la firma y los certificados
-        clave_privada = self.usuario.generar_guardar_clave_privada()
+        clave_privada = firmas_certificados.generar_guardar_clave_privada(self.dni, self.password)
 
         # Firmamos el número de teléfono de la persona que se quiere registrar en bizum
-        self.usuario.generar_guardar_firma(self.telefono, clave_privada)
+        firmas_certificados.generar_guardar_firma(self.telefono, clave_privada)
         print("Su número de teléfono se ha firmado correctamente")
 
         # Hacemos la petición del certificado (csr)
