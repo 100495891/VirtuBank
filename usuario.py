@@ -2,8 +2,9 @@ import json, os, base64, random
 from codificacion import Codificacion
 from cuenta import CuentaBancaria
 from validaciones import Validaciones
-import firmas_certificados
-
+from log_config import get_logger
+from excepciones import ValorInvalidoError, ErrorRegistroUsuarioError, ErrorLoginUsuarioError
+logger = get_logger(__name__)
 class Usuario:
 
     ARCHIVO_USUARIOS = 'usuarios.json'
@@ -24,7 +25,7 @@ class Usuario:
                     return json.load(file)
             return {}
         except json.JSONDecodeError:
-            print("Error al cargar el JSON")
+            logger.error(f"Error al cargar el archivo JSON {archivo}")
 
 
     def guardar_json(self, archivo, datos):
@@ -36,23 +37,29 @@ class Usuario:
             raise RuntimeError(f"Error al guardar usuarios: {e}")
 
     def validar_datos(self, nombre, apellido1, apellido2, telefono, correo_electronico):
-        # Valida la información del usuario
-        if not self.validaciones.validar_dni():
-            raise ValueError('DNI inválido')
-        if not self.validaciones.validar_nombre_apellido(nombre):
-            raise ValueError('Nombre Inválido')
-        if not self.validaciones.validar_nombre_apellido(apellido1):
-            raise ValueError('Primer Apellido Inválido')
-        if not self.validaciones.validar_nombre_apellido(apellido2):
-            raise ValueError('Segundo Apellido Inválido')
-        if not self.validaciones.validar_telefono(telefono):
-            raise ValueError('Teléfono Inválido')
-        if not self.validaciones.validar_correo(correo_electronico):
-            raise ValueError('Correo electrónico inválido')
-
+        try:
+            # Valida la información del usuario
+            if not self.validaciones.validar_dni():
+                raise ValorInvalidoError('DNI inválido')
+            if not self.validaciones.validar_nombre_apellido(nombre):
+                raise ValorInvalidoError('Nombre Inválido')
+            if not self.validaciones.validar_nombre_apellido(apellido1):
+                raise ValorInvalidoError('Primer Apellido Inválido')
+            if not self.validaciones.validar_nombre_apellido(apellido2):
+                raise ValorInvalidoError('Segundo Apellido Inválido')
+            if not self.validaciones.validar_telefono(telefono):
+                raise ValorInvalidoError('Teléfono Inválido')
+            if not self.validaciones.validar_correo(correo_electronico):
+                raise ValorInvalidoError('Correo electrónico inválido')
+        except ValorInvalidoError as e:
+            logger.error(f"Error de validación: {e}")
+            raise e
     def cifrar_datos(self, clave, datos):
-        # Cifra todos los datos del usuario y los devuelve en un diccionario
-        return {key: self.codificacion.cifrar(self.dni, valor, clave) for key, valor in datos.items()}
+        try:
+            # Cifra todos los datos del usuario y los devuelve en un diccionario
+            return {key: self.codificacion.cifrar(self.dni, valor, clave) for key, valor in datos.items()}
+        except Exception as e:
+            raise ErrorRegistroUsuarioError(f"Error al cifrar los datos: {e}")
 
     def registro_usuario(self, nombre, apellido1, apellido2, telefono, correo_electronico):
         try:
@@ -111,7 +118,7 @@ class Usuario:
             return f"El usuario con DNI {self.dni} se ha registrado correctamente"
 
         except Exception as e:
-            raise RuntimeError(f"Error en el registro de usuario: {e}")
+            raise ErrorRegistroUsuarioError(f"Error en el registro de usuario: {e}")
 
     def login_usuario(self):
         # Inicio de sesión de usuario
@@ -124,5 +131,5 @@ class Usuario:
             password_token = base64.b64decode(usuarios[self.dni]['password_token'])
             return self.codificacion.autenticacion(self.password, password_token, salt)
         except Exception as e:
-            raise RuntimeError(f"Error en el inicio de sesión: {e}")
+            raise ErrorLoginUsuarioError(f"Error en el inicio de sesión: {e}")
 

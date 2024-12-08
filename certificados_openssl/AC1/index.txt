@@ -1,3 +1,1 @@
-V	251127115345Z		01	unknown	/C=ES/ST=MADRID/O=UC3M/CN=VirtuBank
-V	251205172436Z		02	unknown	/C=ES/ST=Madrid/O=VirtuBank/CN=virtubank.com
-V	251206102320Z		03	unknown	/C=ES/ST=Madrid/O=02597700B/CN=.
+V	251208104458Z		01	unknown	/C=ES/ST=Madrid/O=02597700B/CN=.
