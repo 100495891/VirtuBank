@@ -1,3 +1,6 @@
+import os
+import subprocess
+
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
 from cryptography.x509 import load_pem_x509_certificates
@@ -6,7 +9,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 import base64
 from log_config import get_logger
-from excepciones import ErrorGenerarClaveError, ErrorCifradoError, ErrorFirmaError, ErrorVerificarFirmaError, ErrorCertificadoError, ErrorCSRGenerationError
+from excepciones import ErrorGenerarClaveError, ErrorCifradoError, ErrorFirmaError, ErrorVerificarFirmaError, ErrorCertificadoError, ErrorCSRGenerationError, NoExisteRutaArchivo
 
 logger = get_logger(__name__)
 
@@ -124,12 +127,6 @@ def generar_csr(clave_privada, dni):
     except Exception as e:
         raise ErrorCSRGenerationError(f"Error al generar el CSR: {e}")
 
-# para firmar el certificado:
- # primero comprobamos la solicitud
- # AC1> openssl req -in ./solicitudes/csr.pem -text -noout
- # AC1> openssl ca -in ./solicitudes/csr.pem -notext -config ./openssl.cnf
- # AC1> cp ./nuevoscerts/{num}.pem ../certificados/cert_{dni}.pem
-
 def verificar_certificado(clave_publica_cert_raiz, cert_a_verificar):
     # En nuestro caso como solo hay un AC, solo tenemos el certificado de usuario y el raíz
     try:
@@ -168,4 +165,5 @@ def verificaciones(dni, telefono):
     except Exception as e:
         logger.error(f"Error en las verificaciones: {e}")
         raise
+
 

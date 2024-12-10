@@ -41,12 +41,21 @@ class Bizum:
             # Hacemos la petición del certificado (csr)
             firmas_certificados.generar_csr(clave_privada, self.dni)
 
+            with open(f"certificados_openssl/AC1/serial", 'r') as f:
+                serial_content = f.read()
+                serial = ''.join([char for char in serial_content if char.isdigit()])
+            logger.info(f"Acceso correcto al número de serie")
+            with open(f"certificados_openssl/AC1/dnis/{serial}.txt", 'w') as f:
+                f.write(self.dni)
+            logger.info(f"DNI guardado en archivo")
+
             # Ahora firmamos el certificado manualmente con openSSL
             input("Presione Enter cuando esté el certificado firmado...")
 
+
             # Ahora verificamos la firma, el certificado del usuario y el certificado raiz
             firmas_certificados.verificaciones(self.dni, self.telefono)
-            logger.info("Todo ha sido correctamente certificado")
+            logger.info("Todo ha sido correctamente verificado")
 
             bizums[self.telefono] = {
                 'dni' : self.usuario.dni,

@@ -28,5 +28,35 @@
         "tarjeta": "o3sgW5QdV+qy4MqVseBR7QFm+EOmBUEwhZ/bQvziIrM=",
         "fecha_expiracion_tarjeta": "44iK9fiOZ+Fk2nc+I+A+N5pol+VG",
         "cvv": "qby0rLIT0rkHMnYcNForNr+/7A=="
+    },
+    "02251234V": {
+        "password_token": "LqKL7HDyAJiormBnAVWGhcl//ZA+fEx0KR/euXOBFpY=",
+        "salt": "6XqF3WctwdKmP+QWrmn04g==",
+        "salt2": "NOLbj/USrPG2lLXJq5SkNg==",
+        "nombre": "MlH24Qvm2lzY84FkVGZLIXd9W3q2",
+        "apellido1": "DN1wKi4tsgIYKYrt/BiOLXBoGx6SE0o+NPc=",
+        "apellido2": "hrcnzHFMuWNtvQlEUcA5jtyko0hTWA==",
+        "telefono": "cgeOStDJh5SBo8I/+mMw1SgMZhGvu6sCpw==",
+        "correo_electronico": "bBIstoVWUomlTVRzj7ZeupNSkAC/1NfABHOBVQtzcg==",
+        "saldo_disponible": "vbI8+hXPHyWqHfwWUtkC4og=",
+        "numero_cuenta": "apGfoJFsRpxZEN1xHuxt5vK8zI3V5xVPijCVkuApGphQTTcwTv+FfEY=",
+        "tarjeta": "OiJ6Ii72DanS1FbchhdmMC5AxMk93wYuh4eMNpC+w6Y=",
+        "fecha_expiracion_tarjeta": "nG6gvIo8lyOwUFLjorU5Kur9Bmw9",
+        "cvv": "Blmc5T5oTolJmh7whmYoVQxafw=="
+    },
+    "70361152N": {
+        "password_token": "KW+VCkoDXyXJ+xyipzBiiJEJZ8TKLTOl7oc5QzzXX90=",
+        "salt": "YT1nPY2fFSlWA5xsc+8j3Q==",
+        "salt2": "IY4KKHy15UioqGnIMDjRDQ==",
+        "nombre": "1JAK7q466TDijGVb+wekq/E=",
+        "apellido1": "meeaRuLNgMZG7ZsqRLYKK58=",
+        "apellido2": "DdxLmznZi5E2eHiJCnxtmtk=",
+        "telefono": "tf2iP9ftv/VE3eFDuhnmyx7x/Vre9j38Gg==",
+        "correo_electronico": "Z0YzCHRf5Y/xggyYCwHxl6vJiNWbh1/lyNXj",
+        "saldo_disponible": "CfUfep5u9tBZJ6yd94agvPc=",
+        "numero_cuenta": "VwRWnYH5v9zmeFJOkwU4g4vvGuiTGK4pyUCr0BkN8x9sQqG7PizG/10=",
+        "tarjeta": "AeaJIdMPzdc16aIdcgJxx/CryIlVrZdiH2M7ENXXi6c=",
+        "fecha_expiracion_tarjeta": "voHCP0i23UqtOhuWYyV+50wrX3TF",
+        "cvv": "g6oYG76ndTDVfRlFssUmJhS97g=="
     }
 }

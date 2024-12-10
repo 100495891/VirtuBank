@@ -22,5 +22,29 @@
         "tarjeta": "83BzpvlFHQMGK7yo",
         "fecha_expiracion_tarjeta": "DMLjZN30ebOPqwEG",
         "cvv": "riLdJJp4DceUtQgA"
+    },
+    "02251234V": {
+        "nombre": "RkrCYD33ymSlBFVE",
+        "apellido1": "8uCFOVS/eXbFt64/",
+        "apellido2": "lzb2egIbW4guSjb0",
+        "telefono": "zXZDk6vDpTx9tUV/",
+        "correo_electronico": "guKHcbeiGYWHuddz",
+        "saldo_disponible": "m+eHguZsOkqpGhC+",
+        "numero_cuenta": "A6Pepdo3Q7+ohwlZ",
+        "tarjeta": "yc+V29+ez/atWKVt",
+        "fecha_expiracion_tarjeta": "XmDP9U2aLpgb6LVh",
+        "cvv": "kvHjJycKZBhi+qT3"
+    },
+    "70361152N": {
+        "nombre": "FVNhnIlpDLVa0Iut",
+        "apellido1": "otFvSEuqyIskY43K",
+        "apellido2": "zarOz188CfwTFXom",
+        "telefono": "pc3/nZNUTp0jiQ4H",
+        "correo_electronico": "x5ocfSltSiXH7qfJ",
+        "saldo_disponible": "tN7XBDPzfPWytMZ4",
+        "numero_cuenta": "FNAPodoVHdG+WL2x",
+        "tarjeta": "fLzpzs38CwlbLshu",
+        "fecha_expiracion_tarjeta": "7Iitb7UXz3yCbRFF",
+        "cvv": "rbF2L2aToLx8Cbcu"
     }
 }

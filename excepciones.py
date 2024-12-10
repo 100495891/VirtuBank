@@ -53,3 +53,6 @@ class ErrorRegistroUsuarioError(Exception):
 class ErrorLoginUsuarioError(Exception):
     """Excepción para errores en el inicio de sesión de usuario."""
     pass
+
+class NoExisteRutaArchivo(Exception):
+    """Excepción para cuando no existe una ruta"""
