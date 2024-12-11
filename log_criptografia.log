@@ -1,0 +1,34 @@
+2024-12-11 12:09:14,292 - ERROR - Error en autenticación de contraseña: Keys do not match.
+2024-12-11 12:09:27,373 - INFO - Contraseña autenticada correctamente
+2024-12-11 12:09:27,373 - INFO - Gestor de Datos inicializado para el usuario con DNI: 02597700B
+2024-12-11 12:09:27,373 - INFO - Gestor de Datos inicializado para el usuario con DNI: 02597700B
+2024-12-11 12:09:27,470 - INFO - Clave ChaCha generada correctamente
+2024-12-11 12:09:27,470 - INFO - Datos obtenidos
+2024-12-11 12:09:27,471 - INFO - Datos descifrados correctamente para el DNI: 02597700B
+2024-12-11 12:09:27,471 - INFO - Datos revisados para telefono
+2024-12-11 12:09:31,410 - INFO - Contraseña autenticada correctamente
+2024-12-11 12:09:31,427 - INFO - Clave privada RSA generada correctamente
+2024-12-11 12:09:31,429 - INFO - Clave privada cifrada correctamente
+2024-12-11 12:09:31,430 - INFO - Clave privada guardada exitosamente
+2024-12-11 12:09:31,431 - INFO - Mensaje firmado correctamente
+2024-12-11 12:09:31,432 - INFO - Firma guardada correctamente
+2024-12-11 12:09:31,432 - INFO - Su número de teléfono se ha firmado correctamente
+2024-12-11 12:09:31,435 - INFO - CSR generado y guardado para 02597700B
+2024-12-11 12:09:31,435 - INFO - Acceso correcto al número de serie
+2024-12-11 12:09:31,436 - INFO - DNI guardado en archivo
+2024-12-11 12:12:37,884 - ERROR - Error en las verificaciones: [Errno 2] No such file or directory: 'certificados_openssl/certificados/cert_02597700B.pem'
+2024-12-11 12:12:37,884 - ERROR - Error inesperado en registrarse_bizum: [Errno 2] No such file or directory: 'certificados_openssl/certificados/cert_02597700B.pem'
+2024-12-11 12:12:47,223 - INFO - Contraseña autenticada correctamente
+2024-12-11 12:12:47,234 - INFO - Clave privada RSA generada correctamente
+2024-12-11 12:12:47,235 - INFO - Clave privada cifrada correctamente
+2024-12-11 12:12:47,235 - INFO - Clave privada guardada exitosamente
+2024-12-11 12:12:47,236 - INFO - Mensaje firmado correctamente
+2024-12-11 12:12:47,236 - INFO - Firma guardada correctamente
+2024-12-11 12:12:47,236 - INFO - Su número de teléfono se ha firmado correctamente
+2024-12-11 12:12:47,237 - INFO - CSR generado y guardado para 02597700B
+2024-12-11 12:12:47,237 - INFO - Acceso correcto al número de serie
+2024-12-11 12:12:47,237 - INFO - DNI guardado en archivo
+2024-12-11 12:14:35,430 - INFO - La firma se ha verificado correctamente
+2024-12-11 12:14:35,430 - INFO - Verificación del certificado del usuario correcta
+2024-12-11 12:14:35,430 - INFO - Verificación de la Autoridad de Certificación correcta
+2024-12-11 12:14:35,430 - INFO - Todo ha sido correctamente verificado
